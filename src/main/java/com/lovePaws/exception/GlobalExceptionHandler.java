@@ -1,0 +1,86 @@
+package com.lovePaws.exception;
+
+import java.time.LocalDateTime;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    // Manejar datos duplicados
+    @ExceptionHandler(DatoDuplicadoException.class)
+    public ResponseEntity<ApiErrorDTO> manejarDatoDuplicado(DatoDuplicadoException ex, HttpServletRequest request) {
+
+        ApiErrorDTO error = new ApiErrorDTO(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    // Manejar errores de validacion del DTO
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiErrorDTO> manejarValidaciones(MethodArgumentNotValidException ex, HttpServletRequest request) {
+        String mensajes = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + ": "
+                        + error.getDefaultMessage())
+                .distinct()
+                .collect(Collectors.joining("; "));
+
+        ApiErrorDTO error = new ApiErrorDTO(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                mensajes,
+                request.getRequestURI()
+        );
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    // Manejar JSON incorrectos
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiErrorDTO> manejarJsonIncorrecto(HttpMessageNotReadableException ex, HttpServletRequest request) {
+
+        ApiErrorDTO error = new ApiErrorDTO(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "El cuerpo de la solicitud no contiene un JSON valido.",
+                request.getRequestURI()
+        );
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    // Manejar errores inesperados
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiErrorDTO> manejarErrorGeneral(Exception ex, HttpServletRequest request) {
+
+        logger.error("Error inesperado en el servidor", ex);
+
+        ApiErrorDTO error = new ApiErrorDTO(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                "Ocurrio un error interno en el servidor.",
+                request.getRequestURI()
+        );
+        return ResponseEntity.internalServerError().body(error);
+    }
+}
