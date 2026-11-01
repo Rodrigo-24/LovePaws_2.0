@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.lovePaws.usuario.dto.CrearGestorDTO;
 import com.lovePaws.usuario.dto.RegistroAdoptanteDTO;
 import com.lovePaws.usuario.dto.UsuarioRespuestaDTO;
 import com.lovePaws.usuario.entity.EstadoUsuario;
@@ -97,5 +98,52 @@ public class UsuarioService {
 				usuarioGuardado.getEstado(), 
 				usuarioGuardado.getFechaCreacion()
 		);
+	}
+	
+	@Transactional
+	public UsuarioRespuestaDTO registrarGestor(CrearGestorDTO datos) {
+		//COMPROBAR SI EL USERNAME YA EXISTE
+		if (usuarioRepository.existsByUsername(datos.getUsername())) {
+			throw new DatoDuplicadoException("El nombre de usuario ya está registrado");
+		}
+		
+		//COMPROBAR SI EL EMAIL YA EXISTE
+		if (usuarioRepository.existsByEmail(datos.getEmail())) {
+			throw new DatoDuplicadoException("El correo electrónico ya está registrado");
+		}
+		
+		//BUSCAR EL ROL GESTOR
+		Rol rolGestor = rolRepository.findByNombre(RolNombre.GESTOR)
+				.orElseThrow(() -> new IllegalStateException("No se encontró el rol del GESTOR"));
+		
+		//CIFRAR LA CONTRASEÑA
+	    String passwordHash = passwordEncoder.encode(datos.getPassword());
+	    
+	    //CREAR LA ENTIDAD USUARIO
+	  	Usuario nuevoUsuario = new Usuario(
+	  			rolGestor, 
+	  			datos.getUsername(), 
+	  			datos.getEmail(), 
+	  			passwordHash, 
+	 			datos.getNombres(), 
+	  			datos.getApellidos(),
+	  			EstadoUsuario.ACTIVO
+	  	);
+	  	
+	  	//GUARDAR EL USUARIO
+		Usuario usuarioGuardado = usuarioRepository.save(nuevoUsuario);
+		
+		//CONVERTIR LA ENTIDAD EN DTO DE RESPUESTA
+		return new UsuarioRespuestaDTO(
+				usuarioGuardado.getIdUsuario(), 
+				usuarioGuardado.getUsername(), 
+				usuarioGuardado.getEmail(), 
+				usuarioGuardado.getNombres(), 
+				usuarioGuardado.getApellidos(), 
+				usuarioGuardado.getFotoPerfilUrl(), 
+				usuarioGuardado.getRol().getNombre(), 
+				usuarioGuardado.getEstado(), 
+				usuarioGuardado.getFechaCreacion()
+		); 
 	}
 }
