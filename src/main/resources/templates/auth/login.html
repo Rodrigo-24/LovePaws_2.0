@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<title>Iniciar sesión - LovePaws</title>
+</head>
+
+<body>
+
+	<h1>Bienvenido a LovePaws</h1>
+
+	<p>Inicia sesión con tu cuenta.</p>
+
+	<!-- Mensaje de error -->
+	<p th:if="${param.error}">Usuario o contraseña incorrectos.</p>
+
+	<!-- Mensaje de cierre de sesión -->
+	<p th:if="${param.logout}">Has cerrado sesión correctamente.</p>
+
+	<form th:action="@{/login}" method="post">
+
+		<label>Nombre de usuario</label> <input type="text" name="username"
+			required> <br>
+		<br> <label>Contraseña</label> <input type="password"
+			name="password" required> <br>
+		<br>
+
+		<button type="submit">Iniciar sesión</button>
+
+	</form>
+
+</body>
+</html>

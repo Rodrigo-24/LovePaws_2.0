@@ -1,0 +1,23 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<title>LovePaws</title>
+</head>
+
+<body>
+
+	<h1>¡Bienvenido a LovePaws!</h1>
+
+	<p>
+		Has iniciado sesión correctamente, <strong th:text="${username}"></strong>.
+	</p>
+
+	<form th:action="@{/logout}" method="post">
+		<button type="submit">Cerrar sesión</button>
+	</form>
+
+</body>
+</html>

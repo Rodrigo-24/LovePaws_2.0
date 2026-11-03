@@ -1,0 +1,10 @@
+package com.lovePaws.solicitud.entity;
+
+public enum TipoEventoAdopcion {
+
+	SOLICITUD_CREADA,
+    SOLICITUD_APROBADA,
+    SOLICITUD_RECHAZADA,
+    RECHAZO_AUTOMATICO_POR_ADOPCION,
+    RECHAZO_AUTOMATICO_POR_BLOQUEO
+}
