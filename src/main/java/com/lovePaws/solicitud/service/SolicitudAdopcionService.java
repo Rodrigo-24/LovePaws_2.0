@@ -7,6 +7,8 @@ import com.lovePaws.mascota.repository.MascotaRepository;
 import com.lovePaws.usuario.entity.Usuario;
 import com.lovePaws.usuario.repository.UsuarioRepository;
 import com.lovePaws.solicitud.dto.CrearSolicitudDTO;
+import com.lovePaws.solicitud.dto.EventoAdopcionDTO;
+import com.lovePaws.solicitud.dto.PreguntaSolicitudDTO;
 import com.lovePaws.solicitud.dto.ResolverSolicitudDTO;
 import com.lovePaws.solicitud.dto.RespuestaSolicitudDTO;
 import com.lovePaws.solicitud.dto.RespuestaSolicitudDetalleDTO;
@@ -38,6 +40,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,7 +72,7 @@ public class SolicitudAdopcionService {
 		Long idMascota = datos.getIdMascota();
 
 		// 1. Buscar la mascota
-		Mascota mascota = mascotaRepository.findById(idMascota)
+		Mascota mascota = mascotaRepository.buscarPorIdConBloqueo(idMascota)
 				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró la mascota con ID: " + idMascota));
 
 		// 2. Verificar que esté publicada y disponible
@@ -308,7 +312,8 @@ public class SolicitudAdopcionService {
 	}
 
 	@Transactional
-	public SolicitudAdopcionRespuestaDTO rechazarSolicitud(Long idSolicitud, ResolverSolicitudDTO datos, String username) {
+	public SolicitudAdopcionRespuestaDTO rechazarSolicitud(Long idSolicitud, ResolverSolicitudDTO datos,
+			String username) {
 
 		// 1. Buscar al gestor autenticado
 		Usuario gestor = usuarioRepository.findByUsername(username)
@@ -355,6 +360,115 @@ public class SolicitudAdopcionService {
 				mascota.getNombre(), solicitud.getFechaSolicitud(), solicitud.getEstado());
 	}
 
+	@Transactional(readOnly = true)
+	public SolicitudAdopcionDetalleDTO obtenerDetalleSolicitudGestor(Long idSolicitud, String username) {
+
+		// 1. Buscar al gestor autenticado
+		Usuario gestor = usuarioRepository.findByUsername(username)
+				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el usuario: " + username));
+
+		// 2. Buscar la solicitud
+		SolicitudAdopcion solicitud = solicitudRepository.findById(idSolicitud).orElseThrow(
+				() -> new RecursoNoEncontradoException("No se encontró la solicitud con ID: " + idSolicitud));
+
+		// 3. Verificar que la mascota pertenezca al gestor
+		if (!solicitud.getMascota().getRegistradoPor().getIdUsuario().equals(gestor.getIdUsuario())) {
+			throw new RecursoNoEncontradoException("No se encontró la solicitud con ID: " + idSolicitud);
+		}
+
+		// 4. Obtener las respuestas
+		List<RespuestaSolicitudDetalleDTO> respuestas = respuestaSolicitudRepository
+				.findBySolicitud_IdSolicitudOrderByOrdenPreguntaAsc(idSolicitud).stream()
+				.map(respuesta -> new RespuestaSolicitudDetalleDTO(respuesta.getPreguntaTextoSnapshot(),
+						respuesta.getRespuesta(), respuesta.getOrdenPregunta()))
+				.toList();
+
+		// 5. Construir el detalle
+		return new SolicitudAdopcionDetalleDTO(solicitud.getIdSolicitud(), solicitud.getMascota().getIdMascota(),
+				solicitud.getMascota().getNombre(), solicitud.getFechaSolicitud(), solicitud.getEstado(), respuestas);
+	}
+
+	@Transactional(readOnly = true)
+	public List<EventoAdopcionDTO> obtenerHistorialAdoptante(Long idSolicitud, String username) {
+
+		// 1. Buscar al adoptante autenticado
+		Usuario adoptante = usuarioRepository.findByUsername(username)
+				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el usuario: " + username));
+
+		// 2. Buscar la solicitud
+		SolicitudAdopcion solicitud = solicitudRepository.findById(idSolicitud).orElseThrow(
+				() -> new RecursoNoEncontradoException("No se encontró la solicitud con ID: " + idSolicitud));
+
+		// 3. Verificar que pertenezca al adoptante
+		if (!solicitud.getAdoptante().getIdUsuario().equals(adoptante.getIdUsuario())) {
+			throw new RecursoNoEncontradoException("No se encontró la solicitud con ID: " + idSolicitud);
+		}
+
+		// 4. Obtener el historial
+		List<EventoAdopcion> eventos = eventoRepository.findBySolicitud_IdSolicitudOrderByFechaEventoAsc(idSolicitud);
+		return convertirEventos(eventos);
+	}
+
+	@Transactional(readOnly = true)
+	public List<EventoAdopcionDTO> obtenerHistorialGestor(Long idSolicitud, String username) {
+
+		// 1. Buscar al gestor autenticado
+		Usuario gestor = usuarioRepository.findByUsername(username)
+				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el usuario: " + username));
+
+		// 2. Buscar la solicitud
+		SolicitudAdopcion solicitud = solicitudRepository.findById(idSolicitud).orElseThrow(
+				() -> new RecursoNoEncontradoException("No se encontró la solicitud con ID: " + idSolicitud));
+
+		// 3. Verificar que la mascota pertenezca al gestor
+		if (!solicitud.getMascota().getRegistradoPor().getIdUsuario().equals(gestor.getIdUsuario())) {
+			throw new RecursoNoEncontradoException("No se encontró la solicitud con ID: " + idSolicitud);
+		}
+
+		// 4. Obtener el historial
+		List<EventoAdopcion> eventos = eventoRepository.findBySolicitud_IdSolicitudOrderByFechaEventoAsc(idSolicitud);
+		return convertirEventos(eventos);
+	}
+
+	@Transactional(readOnly = true)
+	public Page<EventoAdopcionDTO> listarHistorialGeneral(Pageable pageable) {
+
+		// 1. Obtener los eventos paginados
+		Page<EventoAdopcion> eventos = eventoRepository.findAllByOrderByFechaEventoDesc(pageable);
+
+		// 2. Convertir las entidades en DTO
+		return eventos.map(this::convertirEvento);
+	}
+
+	@Transactional(readOnly = true)
+	public Page<EventoAdopcionDTO> listarHistorialGeneral(TipoEventoAdopcion tipoEvento, Pageable pageable) {
+
+		// 1. Consultar todos los eventos o filtrar por tipo
+		Page<EventoAdopcion> eventos;
+		if (tipoEvento == null) {
+			eventos = eventoRepository.findAllByOrderByFechaEventoDesc(pageable);
+		} else {
+			eventos = eventoRepository.findByTipoEventoOrderByFechaEventoDesc(tipoEvento, pageable);
+		}
+
+		// 2. Convertir las entidades en DTO
+		return eventos.map(this::convertirEvento);
+	}
+
+	@Transactional(readOnly = true)
+	public List<PreguntaSolicitudDTO> listarPreguntasActivas() {
+
+		// 1. Obtener las preguntas activas ordenadas
+		List<PreguntaSolicitud> preguntas = preguntaSolicitudRepository.findByActivaTrueOrderByOrdenAsc();
+
+		// 2. Convertir las entidades en DTO
+		return preguntas.stream()
+				.map(pregunta -> new PreguntaSolicitudDTO(pregunta.getIdPregunta(), pregunta.getTexto(),
+						pregunta.getTipoRespuesta(), pregunta.getOpciones(), pregunta.getOrden(),
+						pregunta.isObligatoria()))
+				.toList();
+	}
+
 	private void validarFormatoRespuesta(PreguntaSolicitud pregunta, String respuesta) {
 		String valor = respuesta.trim();
 		switch (pregunta.getTipoRespuesta()) {
@@ -391,6 +505,25 @@ public class SolicitudAdopcionService {
 			}
 		}
 		}
+	}
+
+	private List<EventoAdopcionDTO> convertirEventos(List<EventoAdopcion> eventos) {
+		return eventos.stream().map(this::convertirEvento).toList();
+	}
+
+	private EventoAdopcionDTO convertirEvento(EventoAdopcion evento) {
+		Usuario actor = evento.getActor();
+		String nombreActor;
+		if (actor == null) {
+			nombreActor = "Usuario no disponible";
+		} else {
+			nombreActor = actor.getNombres();
+			if (actor.getApellidos() != null && !actor.getApellidos().isBlank()) {
+				nombreActor += " " + actor.getApellidos();
+			}
+		}
+		return new EventoAdopcionDTO(evento.getIdEvento(), evento.getTipoEvento(), evento.getDetalle(), nombreActor,
+				evento.getFechaEvento());
 	}
 
 }

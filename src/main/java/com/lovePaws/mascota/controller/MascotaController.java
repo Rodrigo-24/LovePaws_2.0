@@ -24,6 +24,7 @@ import com.lovePaws.mascota.service.MascotaService;
 
 @RestController
 @RequestMapping("/api/gestor/mascotas")
+@PreAuthorize("hasRole('GESTOR')")
 public class MascotaController {
 
 	private final MascotaService mascotaService;
@@ -33,7 +34,6 @@ public class MascotaController {
 	}
 
 	@PostMapping
-	@PreAuthorize("hasRole('GESTOR')")
 	public ResponseEntity<MascotaRespuestaDTO> registrarMascota(@Valid @RequestBody RegistrarMascotaDTO datos,
 			Authentication authentication) {
 		MascotaRespuestaDTO respuesta = mascotaService.registrarMascota(datos, authentication.getName());
@@ -41,7 +41,6 @@ public class MascotaController {
 	}
 
 	@PutMapping("/{idMascota}")
-	@PreAuthorize("hasRole('GESTOR')")
 	public ResponseEntity<MascotaRespuestaDTO> actualizarMascota(@PathVariable Long idMascota,
 			@Valid @RequestBody ActualizarMascotaDTO datos, Authentication authentication) {
 		MascotaRespuestaDTO respuesta = mascotaService.actualizarMascota(idMascota, datos, authentication.getName());
@@ -49,14 +48,12 @@ public class MascotaController {
 	}
 
 	@GetMapping
-	@PreAuthorize("hasRole('GESTOR')")
 	public ResponseEntity<List<MascotaRespuestaDTO>> listarMascotas(Authentication authentication) {
 		List<MascotaRespuestaDTO> mascotas = mascotaService.listarMascotasGestor(authentication.getName());
 		return ResponseEntity.ok(mascotas);
 	}
 
 	@GetMapping("/{idMascota}")
-	@PreAuthorize("hasRole('GESTOR')")
 	public ResponseEntity<MascotaRespuestaDTO> buscarMascota(@PathVariable Long idMascota, 
 			Authentication authentication) { 
 		MascotaRespuestaDTO respuesta = mascotaService.buscarMascotaGestor(idMascota, authentication.getName());

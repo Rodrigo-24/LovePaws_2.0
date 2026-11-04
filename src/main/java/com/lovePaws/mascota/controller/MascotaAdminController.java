@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import com.lovePaws.mascota.dto.MascotaRespuestaDTO;
@@ -33,8 +34,8 @@ public class MascotaAdminController {
 	}
 
 	@PutMapping("/{id}/bloquear")
-	public ResponseEntity<MascotaRespuestaDTO> bloquearMascota(@PathVariable Long id) {
-		MascotaRespuestaDTO respuesta = mascotaService.bloquearMascota(id);
+	public ResponseEntity<MascotaRespuestaDTO> bloquearMascota(@PathVariable Long id, Authentication authentication) {
+		MascotaRespuestaDTO respuesta = mascotaService.bloquearMascota(id, authentication.getName());
 		return ResponseEntity.ok(respuesta);
 	}
 

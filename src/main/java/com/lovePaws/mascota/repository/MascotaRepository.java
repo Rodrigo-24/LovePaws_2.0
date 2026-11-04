@@ -32,4 +32,7 @@ public interface MascotaRepository extends JpaRepository<Mascota, Long> {
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT m FROM Mascota m WHERE m.idMascota = :idMascota")
 	Optional<Mascota> buscarPorIdConBloqueo(@Param("idMascota") Long idMascota);
+
+	List<Mascota> findByEstadoPublicacionAndEstadoAdopcionAndTipoMascota_NombreOrderByFechaRegistroDesc(
+			EstadoPublicacion estadoPublicacion, EstadoAdopcion estadoAdopcion, String nombreTipo);
 }
