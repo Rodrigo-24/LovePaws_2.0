@@ -4,32 +4,170 @@
 
 <head>
 <meta charset="UTF-8">
-<title>Iniciar sesión - LovePaws</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Iniciar sesión | LovePaws</title>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 
 <body>
 
-	<h1>Bienvenido a LovePaws</h1>
+	<main class="login-page">
 
-	<p>Inicia sesión con tu cuenta.</p>
+		<div class="login-container">
 
-	<!-- Mensaje de error -->
-	<p th:if="${param.error}">Usuario o contraseña incorrectos.</p>
+			<!-- Panel de presentacion -->
+			<section class="login-brand-panel">
 
-	<!-- Mensaje de cierre de sesión -->
-	<p th:if="${param.logout}">Has cerrado sesión correctamente.</p>
+				<div class="brand-logo">
+					<span class="brand-icon">🐾</span> <span>LovePaws</span>
+				</div>
 
-	<form th:action="@{/login}" method="post">
+				<div class="brand-content">
 
-		<label>Nombre de usuario</label> <input type="text" name="username"
-			required> <br>
-		<br> <label>Contraseña</label> <input type="password"
-			name="password" required> <br>
-		<br>
+					<span class="brand-label"> BIENVENIDO A LOVEPAWS </span>
 
-		<button type="submit">Iniciar sesión</button>
+					<h1>Cada mascota merece un hogar lleno de amor.</h1>
 
-	</form>
+					<p>Conectamos mascotas que buscan una familia con personas
+						dispuestas a brindarles una nueva oportunidad.</p>
 
+					<div class="brand-illustration">
+						<span>🐶</span> <span>❤️</span> <span>🐱</span>
+					</div>
+
+				</div>
+
+				<div class="brand-footer">Una nueva amistad puede comenzar
+					hoy.</div>
+
+			</section>
+
+
+			<!-- Panel de inicio de sesion -->
+			<section class="login-form-panel">
+
+				<div class="login-form-content">
+
+					<div class="form-heading">
+
+						<span class="form-icon">👋</span>
+
+						<h2>¡Hola de nuevo!</h2>
+
+						<p>Inicia sesión para continuar en LovePaws.</p>
+
+					</div>
+
+
+					<!-- Mensaje de error -->
+					<div th:if="${param.error}" class="alert alert-danger login-alert"
+						role="alert">
+
+						<strong>No se pudo iniciar sesión.</strong> Verifica tu usuario y
+						contraseña.
+
+					</div>
+
+
+					<!-- Mensaje de cierre de sesion -->
+					<div th:if="${param.logout}"
+						class="alert alert-success login-alert" role="alert">Has
+						cerrado sesión correctamente.</div>
+
+
+					<!-- Formulario -->
+					<form th:action="@{/login}" method="post" class="login-form">
+
+						<div class="mb-4">
+
+							<label for="username" class="form-label"> Nombre de
+								usuario </label> <input type="text" class="form-control login-input"
+								id="username" name="username" placeholder="Ingresa tu usuario"
+								autocomplete="username" required>
+
+						</div>
+
+
+						<div class="mb-4">
+
+							<label for="password" class="form-label"> Contraseña </label>
+
+							<div class="password-wrapper">
+
+								<input type="password" class="form-control login-input"
+									id="password" name="password"
+									placeholder="Ingresa tu contraseña"
+									autocomplete="current-password" required>
+
+								<button type="button" class="password-toggle"
+									id="togglePassword" aria-label="Mostrar contraseña"
+									aria-pressed="false" title="Mostrar contraseña">
+
+									<!-- Icono de ojo -->
+									<svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="21"
+										height="21" viewBox="0 0 24 24" fill="none"
+										stroke="currentColor" stroke-width="2" stroke-linecap="round"
+										stroke-linejoin="round">
+						                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+						                <circle cx="12" cy="12" r="3" />					
+						            </svg>
+
+									<!-- Icono de ojo cerrado -->
+									<svg id="eyeSlashIcon" xmlns="http://www.w3.org/2000/svg"
+										width="21" height="21" viewBox="0 0 24 24" fill="none"
+										stroke="currentColor" stroke-width="2" stroke-linecap="round"
+										stroke-linejoin="round" hidden>
+						                <path d="m3 3 18 18" />
+						                <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+						                <path d="M9.9 5.2A11 11 0 0 1 12 5c6.5 0 10 7 10 7a16 16 0 0 1-3.2 4.1" />
+						                <path d="M6.2 6.2C3.5 8 2 12 2 12s3.5 7 10 7a10 10 0 0 0 3-.5" />						
+						            </svg>
+
+								</button>
+
+							</div>
+
+						</div>
+
+
+						<button type="submit" class="btn btn-login w-100">
+
+							Iniciar sesión <span class="ms-2">→</span>
+
+						</button>
+
+					</form>
+
+
+					<div class="login-bottom">
+
+						<p>Al ingresar podrás gestionar tus actividades dentro de
+							LovePaws.</p>
+
+					</div>
+
+				</div>
+
+			</section>
+
+		</div>
+
+
+		<!-- Footer -->
+		<footer class="login-footer">
+
+			<span>🐾 LovePaws</span> <span> © LovePaws. Todos los derechos
+				reservados. </span>
+
+		</footer>
+
+	</main>
+<script th:src="@{/js/login.js}"></script>
 </body>
 </html>

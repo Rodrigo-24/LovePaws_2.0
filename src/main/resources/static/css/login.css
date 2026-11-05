@@ -1,0 +1,306 @@
+:root {
+	--lp-primary: #e97955;
+	--lp-primary-dark: #d85f3c;
+	--lp-background: #fcf9f6;
+	--lp-text: #343a40;
+	--lp-muted: #7a858e;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	font-family: Arial, sans-serif;
+	color: var(--lp-text);
+	background: radial-gradient(circle at top left, #fff0e9, transparent 35%),
+		var(--lp-background);
+}
+
+/* Contenedor principal */
+.login-page {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 35px 20px 20px;
+}
+
+.login-container {
+	width: 100%;
+	max-width: 1050px;
+	min-height: 620px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	background-color: #fff;
+	border-radius: 25px;
+	overflow: hidden;
+	box-shadow: 0 18px 55px rgba(0, 0, 0, 0.08);
+}
+
+/* Panel de marca */
+.login-brand-panel {
+	padding: 45px;
+	background: linear-gradient(145deg, #e97955, #d85f3c);
+	color: #fff;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.brand-logo {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 1.65rem;
+	font-weight: 800;
+	letter-spacing: -1px;
+}
+
+.brand-icon {
+	font-size: 1.8rem;
+}
+
+.brand-content {
+	max-width: 410px;
+}
+
+.brand-label {
+	font-size: 0.75rem;
+	font-weight: 800;
+	letter-spacing: 2px;
+	color: rgba(255, 255, 255, 0.85);
+}
+
+.brand-content h1 {
+	font-size: clamp(2rem, 4vw, 3rem);
+	font-weight: 800;
+	line-height: 1.2;
+	margin: 20px 0;
+	letter-spacing: -1px;
+}
+
+.brand-content p {
+	color: rgba(255, 255, 255, 0.9);
+	line-height: 1.8;
+	font-size: 1rem;
+}
+
+.brand-illustration {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 20px;
+	margin-top: 35px;
+	padding: 20px;
+	background-color: rgba(255, 255, 255, 0.12);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 20px;
+}
+
+.brand-illustration span {
+	font-size: 3.2rem;
+}
+
+.brand-footer {
+	color: rgba(255, 255, 255, 0.8);
+	font-size: 0.85rem;
+}
+
+/* Panel del formulario */
+.login-form-panel {
+	padding: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.login-form-content {
+	width: 100%;
+	max-width: 380px;
+}
+
+.form-heading {
+	margin-bottom: 35px;
+}
+
+.form-icon {
+	font-size: 2.3rem;
+}
+
+.form-heading h2 {
+	font-size: 2rem;
+	font-weight: 800;
+	margin-top: 15px;
+	margin-bottom: 8px;
+	letter-spacing: -0.7px;
+}
+
+.form-heading p {
+	color: var(--lp-muted);
+	margin-bottom: 0;
+	line-height: 1.6;
+}
+
+/* Alertas */
+.login-alert {
+	border-radius: 12px;
+	font-size: 0.88rem;
+	line-height: 1.5;
+}
+
+/* Campos */
+.form-label {
+	font-size: 0.9rem;
+	font-weight: 700;
+	margin-bottom: 9px;
+}
+
+.login-input {
+	min-height: 50px;
+	padding: 12px 15px;
+	border: 1px solid #e5e0dc;
+	border-radius: 11px;
+	background-color: #fcfbfa;
+	font-size: 0.92rem;
+}
+
+.login-input::placeholder {
+	color: #b4b4b4;
+}
+
+.login-input:focus {
+	background-color: #fff;
+	border-color: var(--lp-primary);
+	box-shadow: 0 0 0 0.2rem rgba(233, 121, 85, 0.13);
+}
+
+/* Boton */
+.btn-login {
+	min-height: 51px;
+	border: none;
+	border-radius: 11px;
+	background-color: var(--lp-primary);
+	color: #fff;
+	font-weight: 800;
+	font-size: 0.95rem;
+	transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-login:hover {
+	background-color: var(--lp-primary-dark);
+	color: #fff;
+	transform: translateY(-2px);
+}
+
+.btn-login:focus-visible {
+	outline: 3px solid rgba(233, 121, 85, 0.35);
+	outline-offset: 3px;
+}
+
+/* Texto inferior */
+.login-bottom {
+	margin-top: 30px;
+	text-align: center;
+}
+
+.login-bottom p {
+	color: var(--lp-muted);
+	font-size: 0.82rem;
+	line-height: 1.6;
+	margin-bottom: 0;
+}
+
+/* Footer */
+.login-footer {
+	display: flex;
+	justify-content: space-between;
+	gap: 15px;
+	width: 100%;
+	max-width: 1050px;
+	padding: 20px 5px 0;
+	color: var(--lp-muted);
+	font-size: 0.8rem;
+}
+
+.login-footer span:first-child {
+	color: var(--lp-primary-dark);
+	font-weight: 800;
+}
+
+/* Responsive */
+@media ( max-width : 768px) {
+	.login-page {
+		padding: 20px 14px;
+	}
+	.login-container {
+		grid-template-columns: 1fr;
+		min-height: auto;
+	}
+	.login-brand-panel {
+		padding: 30px;
+		gap: 30px;
+	}
+	.brand-content h1 {
+		font-size: 2rem;
+	}
+	.brand-illustration {
+		margin-top: 20px;
+	}
+	.brand-illustration span {
+		font-size: 2.5rem;
+	}
+	.login-form-panel {
+		padding: 35px 25px;
+	}
+	.form-heading {
+		margin-bottom: 25px;
+	}
+	.login-footer {
+		flex-direction: column;
+		text-align: center;
+		gap: 6px;
+	}
+}
+
+
+/* Campo de contraseña */
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper .login-input {
+    padding-right: 48px;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 4px;
+    border: none;
+    background: transparent;
+
+    color: #8a9299;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.password-toggle:hover {
+    color: var(--lp-primary-dark);
+}
+
+.password-toggle:focus-visible {
+    outline: 2px solid var(--lp-primary);
+    outline-offset: 3px;
+    border-radius: 5px;
+}

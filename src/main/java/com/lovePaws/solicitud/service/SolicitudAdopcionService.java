@@ -152,7 +152,7 @@ public class SolicitudAdopcionService {
 		respuestaSolicitudRepository.saveAll(respuestas);
 		return new SolicitudAdopcionRespuestaDTO(solicitudGuardada.getIdSolicitud(),
 				solicitudGuardada.getMascota().getIdMascota(), solicitudGuardada.getMascota().getNombre(),
-				solicitudGuardada.getFechaSolicitud(), solicitudGuardada.getEstado());
+				solicitudGuardada.getMascota().getTipoMascota().getNombre(), solicitudGuardada.getFechaSolicitud(), solicitudGuardada.getEstado());
 	}
 
 	@Transactional(readOnly = true)
@@ -169,7 +169,7 @@ public class SolicitudAdopcionService {
 		// 3. Convertir las entidades en DTO
 		return solicitudes.stream()
 				.map(solicitud -> new SolicitudAdopcionRespuestaDTO(solicitud.getIdSolicitud(),
-						solicitud.getMascota().getIdMascota(), solicitud.getMascota().getNombre(),
+						solicitud.getMascota().getIdMascota(), solicitud.getMascota().getNombre(), solicitud.getMascota().getTipoMascota().getNombre(),
 						solicitud.getFechaSolicitud(), solicitud.getEstado()))
 				.toList();
 	}
@@ -307,7 +307,7 @@ public class SolicitudAdopcionService {
 		eventoRepository.saveAll(eventos);
 
 		// 12. Devolver la respuesta
-		return new SolicitudAdopcionRespuestaDTO(solicitud.getIdSolicitud(), mascota.getIdMascota(),
+		return new SolicitudAdopcionRespuestaDTO(solicitud.getIdSolicitud(), mascota.getIdMascota(), mascota.getTipoMascota().getNombre(),
 				mascota.getNombre(), solicitud.getFechaSolicitud(), solicitud.getEstado());
 	}
 
@@ -357,7 +357,7 @@ public class SolicitudAdopcionService {
 		// 8. Devolver la respuesta
 		Mascota mascota = solicitud.getMascota();
 		return new SolicitudAdopcionRespuestaDTO(solicitud.getIdSolicitud(), mascota.getIdMascota(),
-				mascota.getNombre(), solicitud.getFechaSolicitud(), solicitud.getEstado());
+				mascota.getNombre(), mascota.getTipoMascota().getNombre() , solicitud.getFechaSolicitud(), solicitud.getEstado());
 	}
 
 	@Transactional(readOnly = true)

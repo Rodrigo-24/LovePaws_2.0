@@ -6,123 +6,298 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Catálogo de mascotas - LovePaws</title>
+<title>Catálogo de mascotas | LovePaws</title>
 
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/catalogo.css}">
+
 </head>
 
-<body class="bg-body-tertiary">
+<body>
 
 	<!-- Navegacion -->
-	<nav class="navbar navbar-expand-lg bg-white border-bottom">
-		<div class="container">
+	<nav class="navbar navbar-expand-lg sticky-top border-bottom shadow-sm">
+		<div class="container py-2">
 
-			<a class="navbar-brand fw-bold" th:href="@{/}"> LovePaws </a>
+			<!-- Logo -->
+			<a class="navbar-brand brand-name" th:href="@{/adoptante/catalogo}">
+				🐾 LovePaws </a>
 
-			<form th:action="@{/logout}" method="post">
-				<button class="btn btn-outline-danger btn-sm" type="submit">
-					Cerrar sesión</button>
-			</form>
+			<!-- Menu responsive -->
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarAdoptante"
+				aria-controls="navbarAdoptante" aria-expanded="false"
+				aria-label="Abrir menú de navegación">
 
-		</div>
-	</nav>
+				<span class="navbar-toggler-icon"></span>
 
-	<!-- Catalogo -->
-	<main class="container py-5">
+			</button>
 
-		<div class="mb-4">
-			<h1 class="fw-bold">Encuentra a tu compañero</h1>
+			<div class="collapse navbar-collapse" id="navbarAdoptante">
 
-			<p class="text-secondary">Conoce a las mascotas que esperan
-				encontrar un hogar.</p>
-		</div>
+				<!-- Navegacion principal -->
+				<ul class="navbar-nav mx-auto mb-2 mb-lg-0">
 
-		<!-- Cuando no existen mascotas -->
-		<div th:if="${#lists.isEmpty(mascotas)}" class="alert alert-info">
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/adoptante/catalogo}"> Inicio </a></li>
 
-			Actualmente no hay mascotas disponibles para adopción.</div>
+					<li class="nav-item"><a class="nav-link active"
+						href="#catalogo"> Catálogo </a></li>
 
-		<!-- Listado de mascotas -->
-		<div th:unless="${#lists.isEmpty(mascotas)}"
-			class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/adoptante/nosotros}"> Nosotros </a></li>
 
-			<div class="col" th:each="mascota : ${mascotas}">
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/adoptante/mis-adopciones}"> Mis adopciones </a></li>
 
-				<article class="card h-100 shadow-sm border-0">
+				</ul>
 
-					<!-- Fotografia -->
-					<img
-						th:if="${mascota.fotoUrl != null and !#strings.isEmpty(mascota.fotoUrl)}"
-						th:src="${mascota.fotoUrl}"
-						th:alt="${'Fotografía de ' + mascota.nombre}" class="card-img-top"
-						style="height: 220px; object-fit: cover;">
+				<!-- Cuenta y sesion -->
+				<div
+					class="d-flex flex-column flex-lg-row
+                        align-items-lg-center gap-2">
 
-					<div
-						th:unless="${mascota.fotoUrl != null and !#strings.isEmpty(mascota.fotoUrl)}"
-						class="bg-secondary-subtle d-flex align-items-center justify-content-center"
-						style="height: 220px;">
+					<span class="nav-link disabled" aria-disabled="true"> Mi
+						perfil </span>
 
-						<span class="text-secondary"> Sin fotografía </span>
+					<form th:action="@{/logout}" method="post">
 
-					</div>
+						<button type="submit"
+							class="btn btn-outline-danger btn-sm btn-logout">Cerrar
+							sesión</button>
 
-					<!-- Informacion -->
-					<div class="card-body">
+					</form>
 
-						<div
-							class="d-flex justify-content-between align-items-center mb-2">
-
-							<h5 class="card-title fw-bold mb-0" th:text="${mascota.nombre}">
-								Max</h5>
-
-							<span class="badge text-bg-success"> Disponible </span>
-
-						</div>
-
-						<p class="text-secondary mb-2">
-
-							<span th:text="${mascota.tipoMascota}"> PERRO </span> <span
-								th:if="${mascota.raza != null}"
-								th:text="${' · ' + mascota.raza}"> · Mestizo </span> <span
-								th:unless="${mascota.raza != null}"> · Raza no
-								especificada </span>
-
-						</p>
-
-						<p class="card-text" th:if="${mascota.descripcion != null}"
-							th:text="${mascota.descripcion}">Descripción de la mascota.</p>
-
-						<div class="small text-secondary">
-
-							<p class="mb-1">
-								<strong>Edad:</strong> <span
-									th:if="${mascota.edadAnios != null}"
-									th:text="${mascota.edadAnios + ' años '}"> </span> <span
-									th:if="${mascota.edadMeses != null}"
-									th:text="${mascota.edadMeses + ' meses'}"> </span> <span
-									th:if="${mascota.edadAnios == null and mascota.edadMeses == null}">
-									No especificada </span>
-							</p>
-
-							<p class="mb-0">
-								<strong>Sexo:</strong> <span th:if="${mascota.sexo != null}"
-									th:text="${mascota.sexo}"> </span> <span
-									th:unless="${mascota.sexo != null}"> No especificado </span>
-							</p>
-
-						</div>
-
-					</div>
-
-				</article>
+				</div>
 
 			</div>
 
 		</div>
+	</nav>
+
+	<main class="container py-5">
+
+		<!-- Presentacion -->
+		<section class="hero mb-5">
+
+			<div class="row align-items-center g-4">
+
+				<div class="col-lg-8">
+
+					<span class="hero-label"> ADOPTA · CAMBIA UNA VIDA </span>
+
+					<h1 class="hero-title mt-3 mb-3">Encuentra a tu nuevo mejor
+						amigo.</h1>
+
+					<p class="hero-description mb-4">Cada mascota merece un hogar
+						lleno de amor. Conoce a nuestros pequeños compañeros y descubre
+						quién podría convertirse en parte de tu familia.</p>
+
+					<a href="#catalogo" class="btn btn-explore"> Explorar mascotas
+					</a>
+
+				</div>
+
+				<div class="col-lg-4 text-center">
+					<div class="display-1">🐶 🐱</div>
+					<p class="text-secondary fw-semibold mb-0">Una nueva amistad te
+						espera</p>
+				</div>
+
+			</div>
+
+		</section>
+
+		<!-- Catalogo -->
+		<section id="catalogo">
+
+			<div
+				class="d-flex flex-column flex-md-row
+                        justify-content-between align-items-md-center mb-4">
+
+				<div>
+					<h2 class="fw-bold mb-1">Nuestras mascotas</h2>
+
+					<p class="text-secondary mb-0">Encuentra un compañero para toda
+						la vida.</p>
+				</div>
+
+				<div class="mt-3 mt-md-0">
+					<span class="badge rounded-pill text-bg-light px-3 py-2"> <span
+						th:text="${#lists.size(mascotas)}">0</span> mascotas disponibles
+					</span>
+				</div>
+
+			</div>
+
+			<!-- Filtros -->
+			<div class="d-flex flex-wrap gap-2 mb-4">
+
+				<a th:href="@{/adoptante/catalogo}" class="filter-chip"
+					th:classappend="${tipoSeleccionado == 'TODOS'} ? ' is-active' : ''">
+					Todas </a> <a th:href="@{/adoptante/catalogo(tipo='PERRO')}"
+					class="filter-chip"
+					th:classappend="${tipoSeleccionado == 'PERRO'} ? ' is-active' : ''">
+					🐶 Perros </a> <a th:href="@{/adoptante/catalogo(tipo='GATO')}"
+					class="filter-chip"
+					th:classappend="${tipoSeleccionado == 'GATO'} ? ' is-active' : ''">
+					🐱 Gatos </a>
+
+			</div>
+
+			<!-- Sin resultados -->
+			<div th:if="${#lists.isEmpty(mascotas)}" class="empty-state">
+
+				<div class="display-3 mb-3">🐾</div>
+
+				<h4 class="fw-bold">No encontramos mascotas</h4>
+
+				<p class="text-secondary">
+					<span th:if="${tipoSeleccionado == 'TODOS'}"> Actualmente no
+						hay mascotas disponibles para adopción. </span> <span
+						th:unless="${tipoSeleccionado == 'TODOS'}"> Por el momento
+						no tenemos mascotas disponibles de este tipo. </span>
+				</p>
+
+				<a th:href="@{/adoptante/catalogo}" class="btn btn-explore mt-2">
+					Ver todas las mascotas </a>
+
+			</div>
+
+			<!-- Listado -->
+			<div th:unless="${#lists.isEmpty(mascotas)}"
+				class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+				<div class="col" th:each="mascota : ${mascotas}">
+
+					<article class="card pet-card h-100">
+
+						<!-- Fotografia -->
+						<div>
+
+							<img
+								th:if="${mascota.fotoUrl != null
+                                       and !#strings.isEmpty(mascota.fotoUrl)}"
+								th:src="${mascota.fotoUrl}"
+								th:alt="${'Fotografía de ' + mascota.nombre}" class="pet-photo"
+								loading="lazy">
+
+							<div
+								th:unless="${mascota.fotoUrl != null
+                                            and !#strings.isEmpty(mascota.fotoUrl)}"
+								class="pet-photo-placeholder">
+
+								<span class="paw-icon">🐾</span> <span>Fotografía
+									próximamente</span>
+
+							</div>
+
+						</div>
+
+						<!-- Informacion -->
+						<div class="card-body p-4">
+
+							<div
+								class="d-flex justify-content-between
+                                        align-items-center mb-3">
+
+								<span class="pet-type"
+									th:classappend="${mascota.tipoMascota == 'PERRO'}
+                                                     ? ' pet-type-dog'
+                                                     : ' pet-type-cat'"
+									th:text="${mascota.tipoMascota}"> GATO </span> <span
+									class="pet-status"> Disponible </span>
+
+							</div>
+
+							<h3 class="pet-name mb-2" th:text="${mascota.nombre}">Mauro
+							</h3>
+
+							<p class="text-secondary small mb-3">
+
+								<span th:if="${mascota.raza != null}" th:text="${mascota.raza}">
+									Mestizo </span> <span th:unless="${mascota.raza != null}"> Raza
+									no especificada </span>
+
+							</p>
+
+							<p class="pet-description mb-3"
+								th:if="${mascota.descripcion != null
+                                      and !#strings.isEmpty(mascota.descripcion)}"
+								th:text="${mascota.descripcion}">Descripción de la mascota.
+							</p>
+
+							<p class="pet-description mb-3"
+								th:unless="${mascota.descripcion != null
+                                          and !#strings.isEmpty(mascota.descripcion)}">
+								Esta mascota está esperando encontrar un hogar.</p>
+
+							<!-- Datos de la mascota -->
+							<div class="pet-information">
+
+								<div class="d-flex justify-content-between mb-2">
+
+									<strong>Edad</strong> <span class="text-end"> <span
+										th:if="${mascota.edadAnios != null
+                                                      and mascota.edadAnios > 0}"
+										th:text="|${mascota.edadAnios} ${mascota.edadAnios == 1 ? 'año' : 'años'}|">
+									</span> <span
+										th:if="${mascota.edadMeses != null
+                                                      and mascota.edadMeses > 0}"
+										th:text="|${mascota.edadMeses} ${mascota.edadMeses == 1 ? 'mes' : 'meses'}|">
+									</span> <span
+										th:if="${(mascota.edadAnios == null
+                                                      or mascota.edadAnios == 0)
+                                                      and (mascota.edadMeses == null
+                                                      or mascota.edadMeses == 0)}">
+											No especificada </span>
+
+									</span>
+
+								</div>
+
+								<div class="d-flex justify-content-between">
+
+									<strong>Sexo</strong> <span th:if="${mascota.sexo != null}"
+										th:text="${#strings.toLowerCase(
+              #strings.replace(mascota.sexo.toString(), '_', ' ')
+          )}"
+										class="text-capitalize"> Macho </span> <span
+										th:unless="${mascota.sexo != null}"> No especificado </span>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</article>
+
+				</div>
+
+			</div>
+
+		</section>
 
 	</main>
+
+	<!-- Footer -->
+	<footer class="footer mt-5 py-4">
+		<div class="container text-center">
+
+			<p class="mb-1 fw-bold">🐾 LovePaws</p>
+
+			<small> Cada mascota merece un hogar lleno de amor. </small>
+
+		</div>
+	</footer>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+		
+	</script>
 
 </body>
 </html>

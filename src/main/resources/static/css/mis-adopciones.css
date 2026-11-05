@@ -1,0 +1,242 @@
+:root {
+	--lp-primary: #e97955;
+	--lp-primary-dark: #d85f3c;
+	--lp-background: #fcf9f6;
+	--lp-text: #343a40;
+	--lp-muted: #7a858e;
+}
+
+body {
+	background-color: var(--lp-background);
+	color: var(--lp-text);
+	font-family: Arial, sans-serif;
+}
+
+/* Navegacion */
+.navbar {
+	background-color: #fff;
+}
+
+.brand-name {
+	color: var(--lp-primary);
+	font-size: 1.5rem;
+	font-weight: 800;
+	letter-spacing: -1px;
+}
+
+.nav-link {
+	color: #59616a;
+	font-weight: 600;
+	padding: 10px 15px !important;
+	transition: color 0.2s;
+}
+
+.nav-link:hover:not(.disabled) {
+	color: var(--lp-primary-dark);
+}
+
+.nav-link.active {
+	color: var(--lp-primary-dark) !important;
+	font-weight: 800;
+}
+
+.nav-link.disabled {
+	color: #b5b5b5;
+	cursor: not-allowed;
+}
+
+.navbar-toggler {
+	border-color: #e5e0dc;
+	border-radius: 10px;
+}
+
+.navbar-toggler:focus {
+	box-shadow: 0 0 0 0.15rem rgba(233, 121, 85, 0.2);
+}
+
+.btn-logout {
+	border-radius: 10px;
+	font-weight: 600;
+}
+
+/* Encabezado */
+.section-label {
+	color: var(--lp-primary-dark);
+	font-size: 0.78rem;
+	font-weight: 800;
+	letter-spacing: 2px;
+}
+
+.page-title {
+	font-size: clamp(2rem, 5vw, 3rem);
+	font-weight: 800;
+	letter-spacing: -1px;
+}
+
+.page-description {
+	color: var(--lp-muted);
+	font-size: 1.05rem;
+	max-width: 650px;
+	line-height: 1.7;
+}
+
+/* Resumen */
+.summary-card {
+	background-color: #fff;
+	border: 1px solid #eee9e5;
+	border-radius: 16px;
+	padding: 24px;
+}
+
+.request-counter {
+	background-color: #fff0e9;
+	color: var(--lp-primary-dark);
+	padding: 10px 16px;
+	border-radius: 30px;
+	font-weight: 700;
+	font-size: 0.9rem;
+}
+
+/* Tarjetas de solicitudes */
+.request-card {
+	background-color: #fff;
+	border: 1px solid #eee9e5;
+	border-radius: 18px;
+	padding: 27px;
+	transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.request-card:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+.request-id {
+	color: var(--lp-muted);
+	font-size: 0.8rem;
+	font-weight: 600;
+}
+
+.pet-name {
+	font-size: 1.45rem;
+	font-weight: 800;
+}
+
+.pet-type-badge {
+    display: inline-block;
+    background-color: #fff0e9;
+    color: var(--lp-primary-dark);
+    padding: 6px 13px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.information-label {
+	color: var(--lp-muted);
+	font-size: 0.78rem;
+	font-weight: 600;
+}
+
+.information-value {
+	font-size: 0.9rem;
+	font-weight: 600;
+	margin-top: 6px;
+}
+
+/* Estados */
+.status-badge {
+	display: inline-block;
+	padding: 8px 15px;
+	border-radius: 30px;
+	font-size: 0.8rem;
+	font-weight: 800;
+}
+
+.status-pending {
+	background-color: #fff4dc;
+	color: #a8791d;
+}
+
+.status-approved {
+	background-color: #e7f5eb;
+	color: #34804c;
+}
+
+.status-rejected {
+	background-color: #fdebea;
+	color: #bf4b46;
+}
+
+/* Sin solicitudes */
+.empty-state {
+	background-color: #fff;
+	border: 1px dashed #e4d9d1;
+	border-radius: 20px;
+	padding: 60px 25px;
+	text-align: center;
+}
+
+.empty-icon {
+	font-size: 3.5rem;
+	margin-bottom: 20px;
+}
+
+.empty-state h3 {
+	font-weight: 800;
+}
+
+.empty-state p {
+	color: var(--lp-muted);
+	max-width: 490px;
+	margin: 12px auto;
+	line-height: 1.7;
+}
+
+/* Botones */
+.btn-love {
+	background-color: var(--lp-primary);
+	color: #fff;
+	border: none;
+	border-radius: 12px;
+	padding: 12px 23px;
+	font-weight: 700;
+}
+
+.btn-love:hover {
+	background-color: var(--lp-primary-dark);
+	color: #fff;
+}
+
+/* Footer */
+.footer {
+	background-color: #fff;
+	border-top: 1px solid #eee9e5;
+	color: var(--lp-muted);
+}
+
+.footer-brand {
+	color: var(--lp-primary);
+	font-size: 1.4rem;
+	font-weight: 800;
+}
+
+/* Adaptacion a moviles */
+@media ( max-width : 767px) {
+	.request-card {
+		padding: 22px;
+	}
+	.request-card .row {
+		row-gap: 20px !important;
+	}
+	.page-description {
+		font-size: 0.95rem;
+	}
+	.navbar-nav {
+		padding-top: 12px;
+	}
+	.navbar-nav .nav-link {
+		padding-left: 0 !important;
+	}
+}

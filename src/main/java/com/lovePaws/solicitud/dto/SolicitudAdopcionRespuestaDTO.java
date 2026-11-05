@@ -9,14 +9,16 @@ public class SolicitudAdopcionRespuestaDTO {
 	private Long idSolicitud;
 	private Long idMascota;
 	private String nombreMascota;
+	private String tipoMascota;
 	private LocalDateTime fechaSolicitud;
 	private EstadoSolicitud estado;
 
-	public SolicitudAdopcionRespuestaDTO(Long idSolicitud, Long idMascota, String nombreMascota,
+	public SolicitudAdopcionRespuestaDTO(Long idSolicitud, Long idMascota, String nombreMascota, String tipoMascota,
 			LocalDateTime fechaSolicitud, EstadoSolicitud estado) {
 		this.idSolicitud = idSolicitud;
 		this.idMascota = idMascota;
 		this.nombreMascota = nombreMascota;
+		this.tipoMascota = tipoMascota;
 		this.fechaSolicitud = fechaSolicitud;
 		this.estado = estado;
 	}
@@ -31,6 +33,10 @@ public class SolicitudAdopcionRespuestaDTO {
 
 	public String getNombreMascota() {
 		return nombreMascota;
+	}
+	
+	public String getTipoMascota() {
+		return tipoMascota;
 	}
 
 	public LocalDateTime getFechaSolicitud() {

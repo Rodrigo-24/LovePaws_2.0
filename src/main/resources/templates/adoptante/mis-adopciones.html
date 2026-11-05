@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Mis adopciones | LovePaws</title>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<link rel="stylesheet" th:href="@{/css/mis-adopciones.css}">
+</head>
+
+<body>
+
+	<!-- Navegacion -->
+	<nav class="navbar navbar-expand-lg sticky-top border-bottom shadow-sm">
+		<div class="container py-2">
+
+			<a class="navbar-brand brand-name" th:href="@{/adoptante/catalogo}">
+				🐾 LovePaws </a>
+
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarAdoptante"
+				aria-controls="navbarAdoptante" aria-expanded="false"
+				aria-label="Abrir menú">
+
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarAdoptante">
+
+				<ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/adoptante/catalogo}"> Inicio </a></li>
+
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/adoptante/catalogo}"> Catálogo </a></li>
+
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/adoptante/nosotros}"> Nosotros </a></li>
+
+					<li class="nav-item"><a class="nav-link active"
+						th:href="@{/adoptante/mis-adopciones}"> Mis adopciones </a></li>
+
+				</ul>
+
+				<div
+					class="d-flex flex-column flex-lg-row
+                            align-items-lg-center gap-2">
+
+					<span class="nav-link disabled" aria-disabled="true"> Mi
+						perfil </span>
+
+					<form th:action="@{/logout}" method="post">
+
+						<button type="submit"
+							class="btn btn-outline-danger btn-sm btn-logout">Cerrar
+							sesión</button>
+
+					</form>
+
+				</div>
+
+			</div>
+		</div>
+	</nav>
+
+
+	<main class="container py-5">
+
+		<!-- Encabezado -->
+		<section class="page-header mb-5">
+
+			<span class="section-label"> MI ACTIVIDAD </span>
+
+			<h1 class="page-title mt-3">Mis adopciones</h1>
+
+			<p class="page-description">Aquí puedes consultar tus solicitudes
+				de adopción, revisar su estado y seguir el proceso de cada mascota.
+			</p>
+
+		</section>
+
+
+		<!-- Resumen -->
+		<section class="summary-card mb-4">
+
+			<div
+				class="d-flex justify-content-between
+                        align-items-center flex-wrap gap-3">
+
+				<div>
+					<h5 class="fw-bold mb-1">Mis solicitudes</h5>
+
+					<p class="text-secondary mb-0">Consulta todas las solicitudes
+						que has registrado.</p>
+				</div>
+
+				<span class="request-counter"> <span
+					th:text="${#lists.size(solicitudes)}">0</span> solicitudes
+				</span>
+
+			</div>
+
+		</section>
+
+
+		<!-- Cuando no existen solicitudes -->
+		<section th:if="${#lists.isEmpty(solicitudes)}" class="empty-state">
+
+			<div class="empty-icon">🐾</div>
+
+			<h3>Aún no tienes solicitudes</h3>
+
+			<p>Todavía no has solicitado adoptar ninguna mascota. ¡Puede que
+				tu próximo compañero esté esperándote!</p>
+
+			<a th:href="@{/adoptante/catalogo}" class="btn btn-love mt-3">
+				Explorar mascotas </a>
+
+		</section>
+
+
+		<!-- Listado de solicitudes -->
+		<section th:unless="${#lists.isEmpty(solicitudes)}">
+
+			<div class="row g-4">
+
+				<div class="col-12" th:each="solicitud : ${solicitudes}">
+
+					<article class="request-card">
+
+						<div class="row align-items-center g-3">
+
+							<!-- Informacion de la mascota -->
+							<div class="col-md-5">
+
+								<h3 class="pet-name mt-2 mb-1"
+									th:text="${solicitud.nombreMascota}">Mauro</h3>
+
+								<span class="pet-type-badge" th:text="${solicitud.tipoMascota}">
+									GATO </span>
+
+							</div>
+
+
+							<!-- Fecha -->
+							<div class="col-md-4">
+
+								<span class="information-label"> Fecha de solicitud </span>
+
+								<p class="information-value mb-0"
+									th:text="${#temporals.format(solicitud.fechaSolicitud, 'dd/MM/yyyy HH:mm')}">
+								</p>
+
+							</div>
+
+
+							<!-- Estado y accion -->
+							<div class="col-md-3 text-md-end">
+
+								<span class="information-label d-block mb-2"> Estado de
+									solicitud </span> <span
+									th:if="${solicitud.estado.name() == 'PENDIENTE'}"
+									class="status-badge status-pending"> Pendiente </span> <span
+									th:if="${solicitud.estado.name() == 'APROBADA'}"
+									class="status-badge status-approved"> Aprobada </span> <span
+									th:if="${solicitud.estado.name() == 'RECHAZADA'}"
+									class="status-badge status-rejected"> Rechazada </span>
+
+							</div>
+
+						</div>
+
+					</article>
+
+				</div>
+
+			</div>
+
+		</section>
+
+	</main>
+
+
+	<!-- Footer -->
+	<footer class="footer py-4 mt-5">
+
+		<div class="container text-center">
+
+			<p class="footer-brand mb-1">🐾 LovePaws</p>
+
+			<small> Cada mascota merece un hogar lleno de amor. </small>
+
+		</div>
+
+	</footer>
+
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+		
+	</script>
+
+</body>
+</html>
