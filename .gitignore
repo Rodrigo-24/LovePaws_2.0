@@ -23,6 +23,9 @@ buildNumber.properties
 .springBeans
 .sts4-cache
 
+# Fotografías cargadas durante la ejecución
+/uploads/
+
 # IntelliJ IDEA
 .idea/
 *.iws

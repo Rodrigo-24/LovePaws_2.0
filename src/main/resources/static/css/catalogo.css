@@ -131,6 +131,13 @@ body {
 	color: #fff;
 }
 
+/* Indicador de carga del catálogo */
+.catalog-loading {
+	opacity: 0.5;
+	pointer-events: none;
+	transition: opacity 0.2s;
+}
+
 /* Filtros */
 .filter-chip {
 	display: inline-block;

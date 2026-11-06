@@ -1,0 +1,302 @@
+:root {
+	--lp-primary: #e97955;
+	--lp-primary-dark: #d85f3c;
+	--lp-background: #fcf9f6;
+	--lp-text: #343a40;
+	--lp-muted: #7a858e;
+}
+
+body {
+	background-color: var(--lp-background);
+	color: var(--lp-text);
+	font-family: Arial, sans-serif;
+}
+
+/* Navegacion */
+.navbar {
+	background-color: #fff;
+}
+
+.brand-name {
+	color: var(--lp-primary);
+	font-size: 1.5rem;
+	font-weight: 800;
+	letter-spacing: -1px;
+}
+
+.btn-logout {
+	border-radius: 10px;
+	font-weight: 600;
+}
+
+/* Encabezado */
+.section-label {
+	color: var(--lp-primary-dark);
+	font-size: 0.78rem;
+	font-weight: 800;
+	letter-spacing: 2px;
+}
+
+.page-title {
+	font-size: clamp(2rem, 5vw, 2.8rem);
+	font-weight: 800;
+	letter-spacing: -1px;
+}
+
+.page-description {
+	color: var(--lp-muted);
+	line-height: 1.7;
+	margin-bottom: 0;
+}
+
+.btn-register {
+	background-color: var(--lp-primary);
+	color: #fff;
+	border: none;
+	border-radius: 12px;
+	padding: 12px 20px;
+	font-weight: 800;
+	white-space: nowrap;
+}
+
+.btn-register:hover {
+	background-color: var(--lp-primary-dark);
+	color: #fff;
+}
+
+/* Resumen */
+.summary-card {
+	background-color: #fff;
+	border: 1px solid #eee9e5;
+	border-radius: 16px;
+	padding: 23px;
+}
+
+.total-counter {
+	background-color: #fff0e9;
+	color: var(--lp-primary-dark);
+	padding: 10px 16px;
+	border-radius: 30px;
+	font-size: 0.85rem;
+	font-weight: 800;
+}
+
+/* Filtros del inventario */
+.filter-label {
+	color: var(--lp-muted);
+	font-size: 0.88rem;
+	font-weight: 700;
+}
+
+.filter-chip {
+	display: inline-block;
+	padding: 9px 17px;
+	border-radius: 30px;
+	background-color: #fff;
+	border: 1px solid #e5e0dc;
+	color: #59616a;
+	text-decoration: none;
+	font-size: 0.85rem;
+	font-weight: 700;
+	transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.filter-chip:hover {
+	border-color: var(--lp-primary);
+	color: var(--lp-primary-dark);
+}
+
+.filter-chip.is-active {
+	background-color: var(--lp-primary);
+	border-color: var(--lp-primary);
+	color: #fff;
+}
+
+.filter-chip:focus-visible {
+	outline: 3px solid rgba(233, 121, 85, 0.3);
+	outline-offset: 3px;
+}
+
+/* Tarjetas */
+.pet-card {
+	background-color: #fff;
+	border: 1px solid #eee9e5;
+	border-radius: 18px;
+	overflow: hidden;
+	transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.pet-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 12px 28px rgba(0, 0, 0, 0.07);
+}
+
+/* Fotografia */
+.pet-image-container {
+	height: 230px;
+	overflow: hidden;
+	background-color: #f4ede8;
+}
+
+.pet-photo {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.3s;
+}
+
+.pet-card:hover .pet-photo {
+	transform: scale(1.04);
+}
+
+.pet-photo-placeholder {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	color: var(--lp-muted);
+	font-size: 0.85rem;
+}
+
+.placeholder-icon {
+	font-size: 2.8rem;
+}
+
+/* Identificacion */
+.pet-type {
+	padding: 6px 11px;
+	border-radius: 20px;
+	font-size: 0.72rem;
+	font-weight: 800;
+}
+
+.pet-type-dog {
+	background-color: #fff0df;
+	color: #ad6829;
+}
+
+.pet-type-cat {
+	background-color: #edf0ff;
+	color: #5966a8;
+}
+
+.pet-id {
+	color: #a1a7ad;
+	font-size: 0.75rem;
+}
+
+.pet-name {
+	font-size: 1.45rem;
+	font-weight: 800;
+}
+
+.pet-breed {
+	color: var(--lp-muted);
+	font-size: 0.88rem;
+}
+
+/* Informacion */
+.pet-information {
+	border-top: 1px solid #f0ece9;
+	padding-top: 15px;
+}
+
+.pet-information strong {
+	font-size: 0.85rem;
+}
+
+.pet-information span {
+	color: var(--lp-muted);
+	font-size: 0.82rem;
+}
+
+/* Estados */
+.status-container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 7px;
+	border-top: 1px solid #f0ece9;
+	padding-top: 15px;
+}
+
+.status-badge {
+	display: inline-block;
+	padding: 7px 11px;
+	border-radius: 20px;
+	font-size: 0.7rem;
+	font-weight: 800;
+}
+
+.status-available {
+	background-color: #e7f5eb;
+	color: #34804c;
+}
+
+.status-adopted {
+	background-color: #e8efff;
+	color: #4866a8;
+}
+
+.status-active {
+	background-color: #edf0ff;
+	color: #5966a8;
+}
+
+.status-blocked {
+	background-color: #fdebea;
+	color: #bf4b46;
+}
+
+/* Sin mascotas */
+.empty-state {
+	background-color: #fff;
+	border: 1px dashed #e4d9e1;
+	border-radius: 20px;
+	padding: 60px 25px;
+	text-align: center;
+}
+
+.empty-icon {
+	font-size: 3.5rem;
+	margin-bottom: 20px;
+}
+
+.empty-state h3 {
+	font-weight: 800;
+}
+
+.empty-state p {
+	color: var(--lp-muted);
+	max-width: 500px;
+	margin: 12px auto;
+	line-height: 1.7;
+}
+
+/* Footer */
+.footer {
+	background-color: #fff;
+	border-top: 1px solid #eee9e5;
+	color: var(--lp-muted);
+}
+
+.footer-brand {
+	color: var(--lp-primary);
+	font-size: 1.4rem;
+	font-weight: 800;
+}
+
+/* Responsive */
+@media ( max-width : 767px) {
+	.pet-image-container {
+		height: 250px;
+	}
+	.page-header .btn-register {
+		width: 100%;
+	}
+	.summary-card {
+		padding: 20px;
+	}
+}

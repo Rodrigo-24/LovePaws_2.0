@@ -8,6 +8,9 @@ import java.util.Locale;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.lovePaws.exception.DatoInvalidoException;
 import com.lovePaws.exception.RecursoNoEncontradoException;
@@ -43,20 +46,55 @@ public class MascotaService {
 	private final UsuarioRepository usuarioRepository;
 	private final SolicitudAdopcionRepository solicitudRepository;
 	private final EventoAdopcionRepository eventoRepository;
+	private final FotoMascotaService fotoMascotaService;
 
 	public MascotaService(MascotaRepository mascotaRepository, TipoMascotaRepository tipoMascotaRepository,
 			RazaRepository razaRepository, UsuarioRepository usuarioRepository,
-			SolicitudAdopcionRepository solicitudRepository, EventoAdopcionRepository eventoRepository) {
+			SolicitudAdopcionRepository solicitudRepository, EventoAdopcionRepository eventoRepository,
+			FotoMascotaService fotoMascotaService) {
 		this.mascotaRepository = mascotaRepository;
 		this.tipoMascotaRepository = tipoMascotaRepository;
 		this.razaRepository = razaRepository;
 		this.usuarioRepository = usuarioRepository;
 		this.solicitudRepository = solicitudRepository;
 		this.eventoRepository = eventoRepository;
+		this.fotoMascotaService = fotoMascotaService;
 	}
 
+	// Registro mediante API REST (JSON)
 	@Transactional
 	public MascotaRespuestaDTO registrarMascota(RegistrarMascotaDTO datos, String username) {
+		return registrarMascotaInterno(datos, username, datos.getFotoUrl());
+	}
+
+	// Registro mediante formulario web (MultipartFile)
+	@Transactional
+	public MascotaRespuestaDTO registrarMascota(RegistrarMascotaDTO datos, MultipartFile fotografia, String username) {
+
+		// 1. Almacenar la fotografía
+		String rutaFoto = fotoMascotaService.guardar(fotografia);
+
+		// 2. Registrar una acción para cuando termine la transacción
+		if (rutaFoto != null) {
+			TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+				
+				@Override
+				public void afterCompletion(int status) {
+					// Si la transacción no se confirmó,
+					// eliminar la fotografía almacenada
+					if (status != STATUS_COMMITTED) {
+						fotoMascotaService.eliminar(rutaFoto);
+					}
+				}
+			});
+		}
+
+		// 3. Ejecutar el registro normal de la mascota
+		return registrarMascotaInterno(datos, username, rutaFoto);
+	}
+
+	// Lógica común del registro
+	private MascotaRespuestaDTO registrarMascotaInterno(RegistrarMascotaDTO datos, String username, String fotoUrl) {
 
 		// 1. Buscar el tipo de mascota
 		TipoMascota tipo = tipoMascotaRepository.findById(datos.getIdTipoMascota())
@@ -81,7 +119,7 @@ public class MascotaService {
 
 		// 4. Crear la entidad Mascota
 		Mascota nuevaMascota = new Mascota(tipo, raza, datos.getNombre(), datos.getEdadAnios(), datos.getEdadMeses(),
-				datos.getSexo(), datos.getDescripcion(), datos.getFotoUrl(), gestor);
+				datos.getSexo(), datos.getDescripcion(), fotoUrl, gestor);
 
 		// 5. Guardar en MySQL
 		Mascota mascotaGuardada = mascotaRepository.save(nuevaMascota);

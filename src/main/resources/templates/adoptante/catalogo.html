@@ -111,7 +111,7 @@
 		</section>
 
 		<!-- Catalogo -->
-		<section id="catalogo">
+		<section id="catalogo" th:fragment="resultados">
 
 			<div
 				class="d-flex flex-column flex-md-row
@@ -135,13 +135,17 @@
 			<!-- Filtros -->
 			<div class="d-flex flex-wrap gap-2 mb-4">
 
-				<a th:href="@{/adoptante/catalogo}" class="filter-chip"
+				<a th:href="@{/adoptante/catalogo}"
+					th:data-url="@{/adoptante/catalogo/resultados}" data-tipo="TODOS"
+					class="filter-chip" data-catalogo-filtro
 					th:classappend="${tipoSeleccionado == 'TODOS'} ? ' is-active' : ''">
 					Todas </a> <a th:href="@{/adoptante/catalogo(tipo='PERRO')}"
-					class="filter-chip"
+					th:data-url="@{/adoptante/catalogo/resultados}" data-tipo="PERRO"
+					class="filter-chip" data-catalogo-filtro
 					th:classappend="${tipoSeleccionado == 'PERRO'} ? ' is-active' : ''">
 					🐶 Perros </a> <a th:href="@{/adoptante/catalogo(tipo='GATO')}"
-					class="filter-chip"
+					th:data-url="@{/adoptante/catalogo/resultados}" data-tipo="GATO"
+					class="filter-chip" data-catalogo-filtro
 					th:classappend="${tipoSeleccionado == 'GATO'} ? ' is-active' : ''">
 					🐱 Gatos </a>
 
@@ -296,8 +300,7 @@
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-		
 	</script>
-
+	<script th:src="@{/js/catalogo.js}" defer></script>
 </body>
 </html>

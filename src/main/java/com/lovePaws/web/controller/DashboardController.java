@@ -51,6 +51,14 @@ public class DashboardController {
 		return "adoptante/catalogo";
 	}
 
+	@GetMapping("/adoptante/catalogo/resultados")
+	public String resultadosCatalogo(@RequestParam(required = false) String tipo, Model model) {
+		String tipoSeleccionado = (tipo == null || tipo.isBlank()) ? "TODOS" : tipo.trim().toUpperCase(Locale.ROOT);
+		model.addAttribute("mascotas", mascotaService.listarCatalogo(tipoSeleccionado.equals("TODOS") ? null : tipoSeleccionado));
+		model.addAttribute("tipoSeleccionado", tipoSeleccionado);
+		return "adoptante/catalogo :: resultados";
+	}
+
 	@GetMapping("/adoptante/nosotros")
 	public String nosotros() {
 		return "adoptante/nosotros";
@@ -58,7 +66,8 @@ public class DashboardController {
 
 	@GetMapping("/adoptante/mis-adopciones")
 	public String misAdopciones(Authentication authentication, Model model) {
-		model.addAttribute("solicitudes", solicitudAdopcionService.listarSolicitudesAdoptante(authentication.getName()));
+		model.addAttribute("solicitudes",
+				solicitudAdopcionService.listarSolicitudesAdoptante(authentication.getName()));
 		return "adoptante/mis-adopciones";
 	}
 }
