@@ -73,6 +73,17 @@
 
 
 	<main class="container py-5">
+		<!-- Mensaje de éxito -->
+		<div th:if="${mensajeExito}"
+			class="alert alert-success alert-dismissible fade show" role="alert">
+
+			<span th:text="${mensajeExito}"> Operación realizada
+				correctamente. </span>
+
+			<button type="button" class="btn-close" data-bs-dismiss="alert"
+				aria-label="Cerrar"></button>
+
+		</div>
 
 		<!-- Encabezado -->
 		<section class="page-header mb-5">

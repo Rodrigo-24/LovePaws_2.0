@@ -77,7 +77,7 @@ public class MascotaService {
 		// 2. Registrar una acción para cuando termine la transacción
 		if (rutaFoto != null) {
 			TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-				
+
 				@Override
 				public void afterCompletion(int status) {
 					// Si la transacción no se confirmó,
@@ -143,53 +143,17 @@ public class MascotaService {
 		return mascotas.stream().map(this::convertirARespuesta).toList();
 	}
 
+	// Actualización mediante API REST
 	@Transactional
 	public MascotaRespuestaDTO actualizarMascota(Long idMascota, ActualizarMascotaDTO datos, String username) {
+		return actualizarMascotaInterno(idMascota, datos, null, username, false);
+	}
 
-		// 1. Buscar al gestor autenticado
-		Usuario gestor = usuarioRepository.findByUsername(username)
-				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el usuario autenticado."));
-
-		// 2. Buscar la mascota y comprobar que pertenezca al gestor
-		Mascota mascota = mascotaRepository.findByIdMascotaAndRegistradoPor_IdUsuario(idMascota, gestor.getIdUsuario())
-				.orElseThrow(() -> new RecursoNoEncontradoException(
-						"No se encontró la mascota o no tienes permiso para modificarla."));
-
-		// 3. Buscar el nuevo tipo de mascota
-		TipoMascota tipo = tipoMascotaRepository.findById(datos.getIdTipoMascota())
-				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el tipo de mascota seleccionado."));
-
-		// 4. Buscar y validar la nueva raza
-		Raza raza = null;
-		if (datos.getIdRaza() != null) {
-			raza = razaRepository.findById(datos.getIdRaza())
-					.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró la raza seleccionada."));
-			if (!raza.isActiva()) {
-				throw new DatoInvalidoException("La raza seleccionada no está activa.");
-			}
-			if (!raza.getTipoMascota().getIdTipoMascota().equals(tipo.getIdTipoMascota())) {
-				throw new DatoInvalidoException("La raza seleccionada no pertenece al tipo de mascota indicado.");
-			}
-		}
-
-		// 5. Actualizar los datos editables
-		mascota.setTipoMascota(tipo);
-		mascota.setRaza(raza);
-		mascota.setNombre(datos.getNombre());
-		mascota.setEdadAnios(datos.getEdadAnios());
-		mascota.setEdadMeses(datos.getEdadMeses());
-		mascota.setSexo(datos.getSexo());
-		mascota.setDescripcion(datos.getDescripcion());
-		mascota.setFotoUrl(datos.getFotoUrl());
-
-		// 6. Registrar quién realizó la actualización
-		mascota.setActualizadoPor(gestor);
-
-		// 7. Guardar los cambios
-		Mascota mascotaActualizada = mascotaRepository.save(mascota);
-
-		// 8. Devolver el DTO de respuesta
-		return convertirARespuesta(mascotaActualizada);
+	// Actualización mediante formulario web
+	@Transactional
+	public MascotaRespuestaDTO actualizarMascota(Long idMascota, ActualizarMascotaDTO datos, MultipartFile fotografia,
+			String username) {
+		return actualizarMascotaInterno(idMascota, datos, fotografia, username, true);
 	}
 
 	@Transactional(readOnly = true)
@@ -221,6 +185,31 @@ public class MascotaService {
 
 		// 3. Convertir Entity a DTO
 		return convertirARespuesta(mascota);
+	}
+
+	@Transactional(readOnly = true)
+	public ActualizarMascotaDTO obtenerDatosEdicion(Long idMascota, String username) {
+
+		// 1. Buscar al gestor autenticado
+		Usuario gestor = usuarioRepository.findByUsername(username)
+				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el usuario autenticado."));
+
+		// 2. Buscar la mascota y verificar su propietario
+		Mascota mascota = mascotaRepository.findByIdMascotaAndRegistradoPor_IdUsuario(idMascota, gestor.getIdUsuario())
+				.orElseThrow(() -> new RecursoNoEncontradoException(
+						"No se encontró la mascota o no tienes permiso para modificarla."));
+
+		// 3. Construir el DTO con los datos actuales
+		ActualizarMascotaDTO datos = new ActualizarMascotaDTO();
+		datos.setIdTipoMascota(mascota.getTipoMascota().getIdTipoMascota());
+		datos.setIdRaza(mascota.getRaza() != null ? mascota.getRaza().getIdRaza() : null);
+		datos.setNombre(mascota.getNombre());
+		datos.setEdadAnios(mascota.getEdadAnios());
+		datos.setEdadMeses(mascota.getEdadMeses());
+		datos.setSexo(mascota.getSexo());
+		datos.setDescripcion(mascota.getDescripcion());
+		datos.setFotoUrl(mascota.getFotoUrl());
+		return datos;
 	}
 
 	@Transactional(readOnly = true)
@@ -303,5 +292,101 @@ public class MascotaService {
 
 		// Convertir las entidades en DTO
 		return mascotas.stream().map(this::convertirARespuesta).toList();
+	}
+
+	// Lógica común de actualización
+	private MascotaRespuestaDTO actualizarMascotaInterno(Long idMascota, ActualizarMascotaDTO datos,
+			MultipartFile fotografia, String username, boolean actualizarFotoPorArchivo) {
+
+		// 1. Buscar al gestor autenticado
+		Usuario gestor = usuarioRepository.findByUsername(username)
+				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el usuario autenticado."));
+
+		// 2. Buscar la mascota y verificar que le pertenezca
+		Mascota mascota = mascotaRepository.findByIdMascotaAndRegistradoPor_IdUsuario(idMascota, gestor.getIdUsuario())
+				.orElseThrow(() -> new RecursoNoEncontradoException(
+						"No se encontró la mascota o no tienes permiso para modificarla."));
+
+		// 3. Buscar el nuevo tipo de mascota
+		TipoMascota tipo = tipoMascotaRepository.findById(datos.getIdTipoMascota())
+				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el tipo de mascota seleccionado."));
+
+		// 4. Buscar y validar la nueva raza
+		Raza raza = null;
+		if (datos.getIdRaza() != null) {
+			raza = razaRepository.findById(datos.getIdRaza())
+					.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró la raza seleccionada."));
+			if (!raza.isActiva()) {
+				throw new DatoInvalidoException("La raza seleccionada no está activa.");
+			}
+			if (!raza.getTipoMascota().getIdTipoMascota().equals(tipo.getIdTipoMascota())) {
+				throw new DatoInvalidoException("La raza seleccionada no pertenece al tipo de mascota indicado.");
+			}
+		}
+
+		// 5. Gestionar la fotografía
+		String fotoAnterior = mascota.getFotoUrl();
+		String fotoFinal;
+		if (actualizarFotoPorArchivo) {
+			String rutaFotoNueva = fotoMascotaService.guardar(fotografia);
+			// Si no se seleccionó una nueva fotografía,
+			// conservar la fotografía anterior.
+			fotoFinal = rutaFotoNueva != null ? rutaFotoNueva : fotoAnterior;
+
+			// Registrar la limpieza de archivos
+			if (rutaFotoNueva != null) {
+				TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+					@Override
+					public void afterCompletion(int status) {
+						if (status != STATUS_COMMITTED) {
+							// Si falla la transacción,
+							// eliminar la nueva fotografía.
+							fotoMascotaService.eliminar(rutaFotoNueva);
+						} else if (fotoAnterior != null && !fotoAnterior.equals(rutaFotoNueva)) {
+							// Si se confirmó la transacción,
+							// eliminar la fotografía anterior.
+							fotoMascotaService.eliminar(fotoAnterior);
+						}
+					}
+				});
+			}
+		} else {
+			// Mantener el comportamiento del endpoint REST
+			fotoFinal = datos.getFotoUrl();
+		}
+		// 6. Actualizar los datos editables
+		mascota.setTipoMascota(tipo);
+		mascota.setRaza(raza);
+		mascota.setNombre(datos.getNombre());
+		mascota.setEdadAnios(datos.getEdadAnios());
+		mascota.setEdadMeses(datos.getEdadMeses());
+		mascota.setSexo(datos.getSexo());
+		mascota.setDescripcion(datos.getDescripcion());
+		mascota.setFotoUrl(fotoFinal);
+
+		// 7. Registrar quién realizó la actualización
+		mascota.setActualizadoPor(gestor);
+
+		// 8. Guardar los cambios
+		Mascota mascotaActualizada = mascotaRepository.save(mascota);
+
+		// 9. Devolver el DTO
+		return convertirARespuesta(mascotaActualizada);
+	}
+
+	@Transactional(readOnly = true)
+	public MascotaRespuestaDTO buscarMascotaDisponible(Long idMascota) {
+
+		// 1. Buscar la mascota
+		Mascota mascota = mascotaRepository.findById(idMascota)
+				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró la mascota solicitada."));
+
+		// 2. Verificar que esté publicada y disponible
+		if (mascota.getEstadoPublicacion() != EstadoPublicacion.ACTIVA || mascota.getEstadoAdopcion() != EstadoAdopcion.DISPONIBLE) {
+			throw new DatoInvalidoException("Esta mascota ya no está disponible para adopción.");
+		}
+
+		// 3. Convertir a DTO
+		return convertirARespuesta(mascota);
 	}
 }

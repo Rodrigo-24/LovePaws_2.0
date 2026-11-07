@@ -78,6 +78,17 @@
 	</nav>
 
 	<main class="container py-5">
+		<!-- Mensaje de error -->
+		<div th:if="${mensajeError}"
+			class="alert alert-danger alert-dismissible fade show" role="alert">
+
+			<span th:text="${mensajeError}"> No se pudo completar la
+				operación. </span>
+
+			<button type="button" class="btn-close" data-bs-dismiss="alert"
+				aria-label="Cerrar"></button>
+
+		</div>
 
 		<!-- Presentacion -->
 		<section class="hero mb-5">
@@ -274,6 +285,14 @@
 								</div>
 
 							</div>
+							<!-- Solicitar adopción -->
+							<div class="mt-4">
+
+								<a
+									th:href="@{/adoptante/mascotas/{idMascota}/solicitar(idMascota=${mascota.idMascota})}"
+									class="btn btn-explore w-100"> Solicitar adopción </a>
+
+							</div>
 
 						</div>
 
@@ -300,6 +319,7 @@
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+		
 	</script>
 	<script th:src="@{/js/catalogo.js}" defer></script>
 </body>

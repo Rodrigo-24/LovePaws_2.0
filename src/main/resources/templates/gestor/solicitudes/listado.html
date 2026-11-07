@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Solicitudes de adopción | LovePaws</title>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<link rel="stylesheet" th:href="@{/css/solicitudes-gestor.css}">
+</head>
+
+<body>
+
+	<!-- Navegacion -->
+	<nav class="navbar sticky-top border-bottom shadow-sm">
+		<div class="container py-2">
+
+			<a class="navbar-brand brand-name" th:href="@{/gestor/dashboard}">
+				🐾 LovePaws </a>
+
+			<div class="d-flex gap-2">
+
+				<a th:href="@{/gestor/dashboard}"
+					class="btn btn-outline-secondary btn-sm"> Dashboard </a>
+
+				<form th:action="@{/logout}" method="post">
+					<button type="submit"
+						class="btn btn-outline-danger btn-sm btn-logout">Cerrar
+						sesión</button>
+				</form>
+
+			</div>
+
+		</div>
+	</nav>
+
+
+	<main class="container py-5">
+
+		<!-- Encabezado -->
+		<section class="page-header mb-5">
+
+			<span class="section-label"> GESTIÓN DE ADOPCIONES </span>
+
+			<h1 class="page-title mt-2">Solicitudes de adopción</h1>
+
+			<p class="page-description">Revisa y gestiona las solicitudes
+				recibidas para las mascotas que tienes registradas.</p>
+
+		</section>
+
+
+		<!-- Filtros -->
+		<section class="filter-section mb-4">
+
+			<div class="d-flex flex-wrap align-items-center gap-2">
+
+				<span class="filter-label me-2"> Filtrar por: </span>
+
+				<!-- Todas -->
+				<a th:href="@{/gestor/solicitudes}" class="filter-chip"
+					th:classappend="${estadoSeleccionado == null}
+                        ? ' is-active' : ''">
+					Todas </a>
+
+				<!-- Pendientes -->
+				<a th:href="@{/gestor/solicitudes(estado='PENDIENTE')}"
+					class="filter-chip"
+					th:classappend="${estadoSeleccionado != null
+                        and estadoSeleccionado.name() == 'PENDIENTE'}
+                        ? ' is-active' : ''">
+					📋 Pendientes </a>
+
+				<!-- Aprobadas -->
+				<a th:href="@{/gestor/solicitudes(estado='APROBADA')}"
+					class="filter-chip"
+					th:classappend="${estadoSeleccionado != null
+                        and estadoSeleccionado.name() == 'APROBADA'}
+                        ? ' is-active' : ''">
+					❤️ Aprobadas </a>
+
+				<!-- Rechazadas -->
+				<a th:href="@{/gestor/solicitudes(estado='RECHAZADA')}"
+					class="filter-chip"
+					th:classappend="${estadoSeleccionado != null
+                        and estadoSeleccionado.name() == 'RECHAZADA'}
+                        ? ' is-active' : ''">
+					Rechazadas </a>
+
+			</div>
+
+		</section>
+
+
+		<!-- Resumen -->
+		<section class="summary-card mb-4">
+
+			<div
+				class="d-flex justify-content-between
+                align-items-center flex-wrap gap-3">
+
+				<div>
+					<h5 class="fw-bold mb-1">Bandeja de solicitudes</h5>
+
+					<p class="text-secondary mb-0">Consulta las solicitudes de tus
+						mascotas.</p>
+				</div>
+
+				<span class="total-counter"> <span
+					th:text="${#lists.size(solicitudes)}">0</span> solicitudes
+				</span>
+
+			</div>
+
+		</section>
+
+
+		<!-- Cuando no existen solicitudes -->
+		<section th:if="${#lists.isEmpty(solicitudes)}" class="empty-state">
+
+			<div class="empty-icon">📭</div>
+
+			<h3>No hay solicitudes disponibles</h3>
+
+			<p>No encontramos solicitudes que coincidan con el filtro
+				seleccionado.</p>
+
+			<a th:href="@{/gestor/solicitudes}" class="btn btn-register mt-3">
+				Ver todas las solicitudes </a>
+
+		</section>
+
+
+		<!-- Listado de solicitudes -->
+		<section th:unless="${#lists.isEmpty(solicitudes)}">
+
+			<div class="d-flex flex-column gap-3">
+
+				<article class="request-card" th:each="solicitud : ${solicitudes}">
+
+					<!-- Encabezado de la solicitud -->
+					<div class="request-header">
+
+						<span class="request-id"
+							th:text="${'Solicitud #' + solicitud.idSolicitud}">
+							Solicitud #1 </span>
+
+						<!-- Estado pendiente -->
+						<span th:if="${solicitud.estado.name() == 'PENDIENTE'}"
+							class="status-badge status-pending"> Pendiente </span>
+
+						<!-- Estado aprobada -->
+						<span th:if="${solicitud.estado.name() == 'APROBADA'}"
+							class="status-badge status-approved"> Aprobada </span>
+
+						<!-- Estado rechazada -->
+						<span th:if="${solicitud.estado.name() == 'RECHAZADA'}"
+							class="status-badge status-rejected"> Rechazada </span>
+
+					</div>
+
+
+					<!-- Informacion -->
+					<div class="request-information">
+
+						<!-- Adoptante -->
+						<div class="request-person">
+
+							<div class="person-icon">👤</div>
+
+							<div>
+								<span class="information-label"> Adoptante </span>
+
+								<h3 class="information-value"
+									th:text="${solicitud.nombresAdoptante
+                                        + ' '
+                                        + solicitud.apellidosAdoptante}">
+									Nombre del adoptante</h3>
+							</div>
+
+						</div>
+
+
+						<!-- Mascota -->
+						<div class="request-pet">
+
+							<span class="information-label"> Mascota solicitada </span>
+
+							<h3 class="information-value"
+								th:text="${solicitud.nombreMascota}">Max</h3>
+
+							<span class="pet-reference"
+								th:text="${'ID: ' + solicitud.idMascota}"> ID: 1 </span>
+
+						</div>
+
+
+						<!-- Fecha -->
+						<div class="request-date">
+
+							<span class="information-label"> Fecha de solicitud </span> <span
+								class="date-value"
+								th:text="${#temporals.format(
+                                    solicitud.fechaSolicitud,
+                                    'dd/MM/yyyy - HH:mm')}">
+								06/11/2026 - 10:30 </span>
+
+						</div>
+
+					</div>
+
+
+					<!-- Accion -->
+					<div class="request-footer">
+
+						<span class="request-note"> Consulta las respuestas del
+							adoptante. </span> <a class="btn btn-detail"
+							th:href="@{/gestor/solicitudes/{id}/detalle(
+                                id=${solicitud.idSolicitud})}">
+							Ver solicitud → </a>
+
+					</div>
+
+				</article>
+
+			</div>
+
+		</section>
+
+	</main>
+
+
+	<!-- Footer -->
+	<footer class="footer py-4 mt-5">
+
+		<div class="container text-center">
+
+			<p class="footer-brand mb-1">🐾 LovePaws</p>
+
+			<small> Cada mascota merece un hogar lleno de amor. </small>
+
+		</div>
+
+	</footer>
+
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+		
+	</script>
+
+</body>
+</html>

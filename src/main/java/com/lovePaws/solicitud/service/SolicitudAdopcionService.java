@@ -103,14 +103,14 @@ public class SolicitudAdopcionService {
 		}
 
 		// 6. Validar las respuestas recibidas
+		Set<Long> preguntasRecibidas = new HashSet<>();
 		Set<Long> preguntasRespondidas = new HashSet<>();
 
 		for (RespuestaSolicitudDTO respuestaDTO : datos.getRespuestas()) {
-
 			Long idPregunta = respuestaDTO.getIdPregunta();
 
-			// Evitar que se envíe dos veces la misma pregunta
-			if (!preguntasRespondidas.add(idPregunta)) {
+			// Evitar respuestas duplicadas
+			if (!preguntasRecibidas.add(idPregunta)) {
 				throw new DatoInvalidoException("No puedes responder dos veces la misma pregunta.");
 			}
 
@@ -120,9 +120,21 @@ public class SolicitudAdopcionService {
 			if (pregunta == null) {
 				throw new DatoInvalidoException("La pregunta con ID " + idPregunta + " no existe o no está activa.");
 			}
+			String valor = respuestaDTO.getRespuesta();
 
-			// Validar el formato de la respuesta
-			validarFormatoRespuesta(pregunta, respuestaDTO.getRespuesta());
+			// Comprobar si la respuesta está vacía
+			if (valor == null || valor.isBlank()) {
+
+				// Solo se permite dejar vacías las preguntas opcionales
+				if (pregunta.isObligatoria()) {
+					throw new DatoInvalidoException("Debes responder la pregunta: " + pregunta.getTexto());
+				}
+				continue;
+			}
+
+			// Validar el formato de las respuestas contestadas
+			validarFormatoRespuesta(pregunta, valor);
+			preguntasRespondidas.add(idPregunta);
 		}
 
 		// 7. Comprobar que todas las preguntas obligatorias estén respondidas
@@ -141,18 +153,26 @@ public class SolicitudAdopcionService {
 				"El adoptante registró una solicitud de adopción.");
 		eventoRepository.save(evento);
 
-		// 10. Guardar las respuestas
+		// 10. Guardar únicamente las respuestas contestadas
 		List<RespuestaSolicitud> respuestas = new ArrayList<>();
 		for (RespuestaSolicitudDTO respuestaDTO : datos.getRespuestas()) {
+			String valor = respuestaDTO.getRespuesta();
+
+			// No guardar preguntas opcionales sin respuesta
+			if (valor == null || valor.isBlank()) {
+				continue;
+			}
 			PreguntaSolicitud pregunta = preguntasPorId.get(respuestaDTO.getIdPregunta());
 			RespuestaSolicitud respuesta = new RespuestaSolicitud(solicitudGuardada, pregunta, pregunta.getTexto(),
-					respuestaDTO.getRespuesta().trim(), pregunta.getOrden());
+					valor.trim(), pregunta.getOrden());
 			respuestas.add(respuesta);
 		}
 		respuestaSolicitudRepository.saveAll(respuestas);
+		
 		return new SolicitudAdopcionRespuestaDTO(solicitudGuardada.getIdSolicitud(),
 				solicitudGuardada.getMascota().getIdMascota(), solicitudGuardada.getMascota().getNombre(),
-				solicitudGuardada.getMascota().getTipoMascota().getNombre(), solicitudGuardada.getFechaSolicitud(), solicitudGuardada.getEstado());
+				solicitudGuardada.getMascota().getTipoMascota().getNombre(), solicitudGuardada.getFechaSolicitud(),
+				solicitudGuardada.getEstado());
 	}
 
 	@Transactional(readOnly = true)
@@ -169,8 +189,9 @@ public class SolicitudAdopcionService {
 		// 3. Convertir las entidades en DTO
 		return solicitudes.stream()
 				.map(solicitud -> new SolicitudAdopcionRespuestaDTO(solicitud.getIdSolicitud(),
-						solicitud.getMascota().getIdMascota(), solicitud.getMascota().getNombre(), solicitud.getMascota().getTipoMascota().getNombre(),
-						solicitud.getFechaSolicitud(), solicitud.getEstado()))
+						solicitud.getMascota().getIdMascota(), solicitud.getMascota().getNombre(),
+						solicitud.getMascota().getTipoMascota().getNombre(), solicitud.getFechaSolicitud(),
+						solicitud.getEstado()))
 				.toList();
 	}
 
@@ -200,7 +221,10 @@ public class SolicitudAdopcionService {
 
 		// 5. Construir el DTO de detalle
 		return new SolicitudAdopcionDetalleDTO(solicitud.getIdSolicitud(), solicitud.getMascota().getIdMascota(),
-				solicitud.getMascota().getNombre(), solicitud.getFechaSolicitud(), solicitud.getEstado(), respuestas);
+				solicitud.getMascota().getNombre(), solicitud.getMascota().getTipoMascota().getNombre(),
+				solicitud.getMascota().getFotoUrl(), solicitud.getAdoptante().getNombres(),
+				solicitud.getAdoptante().getApellidos(), solicitud.getAdoptante().getEmail(),
+				solicitud.getFechaSolicitud(), solicitud.getEstado(), respuestas);
 	}
 
 	@Transactional(readOnly = true)
@@ -307,8 +331,9 @@ public class SolicitudAdopcionService {
 		eventoRepository.saveAll(eventos);
 
 		// 12. Devolver la respuesta
-		return new SolicitudAdopcionRespuestaDTO(solicitud.getIdSolicitud(), mascota.getIdMascota(), mascota.getTipoMascota().getNombre(),
-				mascota.getNombre(), solicitud.getFechaSolicitud(), solicitud.getEstado());
+		return new SolicitudAdopcionRespuestaDTO(solicitud.getIdSolicitud(), mascota.getIdMascota(),
+				mascota.getNombre(), mascota.getTipoMascota().getNombre(), solicitud.getFechaSolicitud(),
+				solicitud.getEstado());
 	}
 
 	@Transactional
@@ -357,7 +382,8 @@ public class SolicitudAdopcionService {
 		// 8. Devolver la respuesta
 		Mascota mascota = solicitud.getMascota();
 		return new SolicitudAdopcionRespuestaDTO(solicitud.getIdSolicitud(), mascota.getIdMascota(),
-				mascota.getNombre(), mascota.getTipoMascota().getNombre() , solicitud.getFechaSolicitud(), solicitud.getEstado());
+				mascota.getNombre(), mascota.getTipoMascota().getNombre(), solicitud.getFechaSolicitud(),
+				solicitud.getEstado());
 	}
 
 	@Transactional(readOnly = true)
@@ -385,7 +411,10 @@ public class SolicitudAdopcionService {
 
 		// 5. Construir el detalle
 		return new SolicitudAdopcionDetalleDTO(solicitud.getIdSolicitud(), solicitud.getMascota().getIdMascota(),
-				solicitud.getMascota().getNombre(), solicitud.getFechaSolicitud(), solicitud.getEstado(), respuestas);
+				solicitud.getMascota().getNombre(), solicitud.getMascota().getTipoMascota().getNombre(),
+				solicitud.getMascota().getFotoUrl(), solicitud.getAdoptante().getNombres(),
+				solicitud.getAdoptante().getApellidos(), solicitud.getAdoptante().getEmail(),
+				solicitud.getFechaSolicitud(), solicitud.getEstado(), respuestas);
 	}
 
 	@Transactional(readOnly = true)
