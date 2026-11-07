@@ -18,6 +18,9 @@ public class RegistrarMascotaDTO {
 	@Positive(message = "La raza seleccionada no es válida")
 	private Long idRaza;
 
+	@Size(max = 80, message = "La raza no puede superar los 80 caracteres")
+	private String raza;
+
 	@NotBlank(message = "El nombre de la mascota es obligatorio")
 	@Size(max = 100)
 	private String nombre;
@@ -40,7 +43,6 @@ public class RegistrarMascotaDTO {
 	public RegistrarMascotaDTO() {
 	}
 
-
 	public Integer getIdTipoMascota() {
 		return idTipoMascota;
 	}
@@ -55,6 +57,14 @@ public class RegistrarMascotaDTO {
 
 	public void setIdRaza(Long idRaza) {
 		this.idRaza = idRaza;
+	}
+
+	public String getRaza() {
+		return raza;
+	}
+
+	public void setRaza(String raza) {
+		this.raza = raza;
 	}
 
 	public String getNombre() {

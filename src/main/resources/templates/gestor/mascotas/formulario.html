@@ -101,19 +101,40 @@
 
 						<!-- Raza -->
 						<div class="col-md-6">
-							<label for="idRaza" class="form-label">Raza</label> <select
-								class="form-select custom-input" id="idRaza"
-								th:field="*{idRaza}">
-								<option value="">Selecciona una raza (opcional)</option>
-								<option th:each="raza : ${razas}" th:value="${raza.idRaza}"
-									th:text="${raza.nombre}"
-									th:attr="data-tipo=${raza.tipoMascota.idTipoMascota}">
-								</option>
-							</select> <small class="form-text"> Selecciona una raza
-								correspondiente al tipo de mascota. </small>
+							<label for="raza" class="form-label">Raza</label>
+
+							<div class="breed-autocomplete">
+
+								<input type="text" class="form-control custom-input" id="raza"
+									th:field="*{raza}" placeholder="Ej. Labrador Retriever"
+									maxlength="80" autocomplete="off" role="combobox"
+									aria-autocomplete="list" aria-haspopup="listbox"
+									aria-expanded="false" aria-controls="opcionesRaza">
+
+								<!-- Panel de sugerencias -->
+								<div id="sugerenciasRaza" class="breed-suggestions" hidden>
+
+									<div id="opcionesRaza" class="breed-suggestions-list"
+										role="listbox"></div>
+
+									<div id="mensajeSugerencias" class="breed-suggestions-hint">
+									</div>
+
+								</div>
+
+							</div>
+
+							<!-- Catálogo de razas cargado desde Thymeleaf -->
+							<div id="catalogoRazas" hidden>
+								<span th:each="raza : ${razas}" th:data-nombre="${raza.nombre}"
+									th:data-tipo="${raza.tipoMascota.idTipoMascota}"> </span>
+							</div>
+
+							<small class="form-text"> Escribe una raza o selecciona
+								una de las sugerencias disponibles. </small>
 
 							<div class="text-danger small mt-1"
-								th:if="${#fields.hasErrors('idRaza')}" th:errors="*{idRaza}">
+								th:if="${#fields.hasErrors('raza')}" th:errors="*{raza}">
 							</div>
 						</div>
 

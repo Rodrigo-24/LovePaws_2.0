@@ -100,18 +100,8 @@ public class MascotaService {
 		TipoMascota tipo = tipoMascotaRepository.findById(datos.getIdTipoMascota())
 				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el tipo de mascota seleccionado."));
 
-		// 2. Buscar y validar la raza, si fue seleccionada
-		Raza raza = null;
-		if (datos.getIdRaza() != null) {
-			raza = razaRepository.findById(datos.getIdRaza())
-					.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró la raza seleccionada."));
-			if (!raza.isActiva()) {
-				throw new DatoInvalidoException("La raza seleccionada no está activa.");
-			}
-			if (!raza.getTipoMascota().getIdTipoMascota().equals(tipo.getIdTipoMascota())) {
-				throw new DatoInvalidoException("La raza seleccionada no pertenece al tipo de mascota indicado.");
-			}
-		}
+		// 2. Buscar o registrar la raza
+		Raza raza = resolverRaza(tipo, datos.getIdRaza(), datos.getRaza());
 
 		// 3. Buscar al gestor autenticado
 		Usuario gestor = usuarioRepository.findByUsername(username)
@@ -203,6 +193,7 @@ public class MascotaService {
 		ActualizarMascotaDTO datos = new ActualizarMascotaDTO();
 		datos.setIdTipoMascota(mascota.getTipoMascota().getIdTipoMascota());
 		datos.setIdRaza(mascota.getRaza() != null ? mascota.getRaza().getIdRaza() : null);
+		datos.setRaza(mascota.getRaza() != null ? mascota.getRaza().getNombre() : null);
 		datos.setNombre(mascota.getNombre());
 		datos.setEdadAnios(mascota.getEdadAnios());
 		datos.setEdadMeses(mascota.getEdadMeses());
@@ -294,6 +285,41 @@ public class MascotaService {
 		return mascotas.stream().map(this::convertirARespuesta).toList();
 	}
 
+	private Raza resolverRaza(TipoMascota tipo, Long idRaza, String nombreRaza) {
+
+		// Caso 1. El formulario web envía el nombre de la raza
+		if (nombreRaza != null && !nombreRaza.isBlank()) {
+
+			// Normalizar el nombre
+			String nombreNormalizado = nombreRaza.trim().replaceAll("\\s+", " ");
+
+			// Buscar si ya existe para el tipo de mascota seleccionado
+			Raza raza = razaRepository
+					.findByTipoMascota_IdTipoMascotaAndNombreIgnoreCase(tipo.getIdTipoMascota(), nombreNormalizado)
+					.orElseGet(() -> razaRepository.save(new Raza(tipo, nombreNormalizado)));
+
+			if (!raza.isActiva()) {
+				throw new DatoInvalidoException("La raza indicada existe, pero actualmente está desactivada.");
+			}
+			return raza;
+		}
+
+		// Caso 2. La API REST envía el ID de una raza existente
+		if (idRaza != null) {
+			Raza raza = razaRepository.findById(idRaza)
+					.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró la raza seleccionada."));
+			if (!raza.isActiva()) {
+				throw new DatoInvalidoException("La raza seleccionada no está activa.");
+			}
+			if (!raza.getTipoMascota().getIdTipoMascota().equals(tipo.getIdTipoMascota())) {
+				throw new DatoInvalidoException("La raza seleccionada no pertenece al tipo de mascota indicado.");
+			}
+			return raza;
+		}
+		// Caso 3. No se indicó ninguna raza
+		return null;
+	}
+
 	// Lógica común de actualización
 	private MascotaRespuestaDTO actualizarMascotaInterno(Long idMascota, ActualizarMascotaDTO datos,
 			MultipartFile fotografia, String username, boolean actualizarFotoPorArchivo) {
@@ -311,18 +337,8 @@ public class MascotaService {
 		TipoMascota tipo = tipoMascotaRepository.findById(datos.getIdTipoMascota())
 				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el tipo de mascota seleccionado."));
 
-		// 4. Buscar y validar la nueva raza
-		Raza raza = null;
-		if (datos.getIdRaza() != null) {
-			raza = razaRepository.findById(datos.getIdRaza())
-					.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró la raza seleccionada."));
-			if (!raza.isActiva()) {
-				throw new DatoInvalidoException("La raza seleccionada no está activa.");
-			}
-			if (!raza.getTipoMascota().getIdTipoMascota().equals(tipo.getIdTipoMascota())) {
-				throw new DatoInvalidoException("La raza seleccionada no pertenece al tipo de mascota indicado.");
-			}
-		}
+		// 4. Buscar o registrar la nueva raza
+		Raza raza = resolverRaza(tipo, datos.getIdRaza(), datos.getRaza());
 
 		// 5. Gestionar la fotografía
 		String fotoAnterior = mascota.getFotoUrl();
@@ -382,7 +398,8 @@ public class MascotaService {
 				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró la mascota solicitada."));
 
 		// 2. Verificar que esté publicada y disponible
-		if (mascota.getEstadoPublicacion() != EstadoPublicacion.ACTIVA || mascota.getEstadoAdopcion() != EstadoAdopcion.DISPONIBLE) {
+		if (mascota.getEstadoPublicacion() != EstadoPublicacion.ACTIVA
+				|| mascota.getEstadoAdopcion() != EstadoAdopcion.DISPONIBLE) {
 			throw new DatoInvalidoException("Esta mascota ya no está disponible para adopción.");
 		}
 

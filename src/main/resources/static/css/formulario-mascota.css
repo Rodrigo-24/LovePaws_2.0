@@ -207,3 +207,87 @@ body {
 		width: 100%;
 	}
 }
+
+/* ==========================================
+   Autocompletado de razas
+========================================== */
+.breed-autocomplete {
+	position: relative;
+}
+
+.breed-suggestions {
+	position: absolute;
+	top: calc(100% + 7px);
+	left: 0;
+	right: 0;
+	z-index: 1050;
+	background-color: #fff;
+	border: 1px solid #eee1d9;
+	border-radius: 13px;
+	padding: 7px;
+	box-shadow: 0 10px 25px rgba(52, 58, 64, 0.12);
+	max-height: 245px;
+	overflow-y: auto;
+}
+
+.breed-suggestions[hidden] {
+	display: none !important;
+}
+
+.breed-suggestions-list {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+}
+
+/* Cada sugerencia */
+.breed-suggestion-option {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	padding: 10px 12px;
+	background-color: transparent;
+	border: none;
+	border-radius: 9px;
+	color: var(--lp-text);
+	font-size: 0.9rem;
+	text-align: left;
+	transition: background-color 0.18s ease, color 0.18s ease;
+	cursor: pointer;
+}
+
+.breed-suggestion-option:hover, .breed-suggestion-option:focus-visible,
+	.breed-suggestion-option[aria-selected="true"] {
+	background-color: #fcf1ec;
+	color: var(--lp-primary-dark);
+	outline: none;
+}
+
+/* Etiqueta de raza registrada */
+.breed-suggestion-tag {
+	flex-shrink: 0;
+	padding: 3px 8px;
+	background-color: #fff1eb;
+	color: var(--lp-primary-dark);
+	border-radius: 20px;
+	font-size: 0.7rem;
+	font-weight: 700;
+}
+
+/* Mensaje inferior */
+.breed-suggestions-hint {
+	padding: 9px 11px 5px;
+	margin-top: 5px;
+	border-top: 1px solid #f1eae5;
+	color: var(--lp-muted);
+	font-size: 0.76rem;
+}
+
+/* Estado sin resultados */
+.breed-suggestion-empty {
+	padding: 12px;
+	color: var(--lp-muted);
+	font-size: 0.85rem;
+}
