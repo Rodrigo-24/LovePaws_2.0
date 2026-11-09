@@ -22,8 +22,15 @@
 		<div class="container py-2">
 
 			<a class="navbar-brand brand-name" th:href="@{/adoptante/catalogo}">
-				🐾 LovePaws </a> <a th:href="@{/adoptante/catalogo}"
-				class="btn btn-outline-secondary btn-sm"> Volver al catálogo </a>
+				🐾 LovePaws </a>
+			<div class="d-flex align-items-center gap-2">
+
+				<a th:href="@{/adoptante/cuenta}"
+					class="btn btn-outline-secondary btn-sm" th:text="${usuarioActual}">
+					usuario </a> <a th:href="@{/adoptante/catalogo}"
+					class="btn btn-outline-secondary btn-sm"> Volver al catálogo </a>
+
+			</div>
 
 		</div>
 	</nav>

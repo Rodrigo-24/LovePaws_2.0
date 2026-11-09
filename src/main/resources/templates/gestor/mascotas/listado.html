@@ -23,7 +23,10 @@
 
 			<div class="d-flex gap-2">
 				<a th:href="@{/gestor/dashboard}"
-					class="btn btn-outline-secondary btn-sm"> Dashboard </a>
+					class="btn btn-outline-secondary btn-sm"> Dashboard </a> <a
+					th:href="@{/gestor/cuenta}"
+					class="btn btn-outline-secondary btn-sm" th:text="${usuarioActual}">
+					usuario </a>
 
 				<form th:action="@{/logout}" method="post">
 					<button type="submit"

@@ -266,41 +266,87 @@ body {
 	}
 }
 
-
 /* Campo de contraseña */
 .password-wrapper {
-    position: relative;
+	position: relative;
 }
 
 .password-wrapper .login-input {
-    padding-right: 48px;
+	padding-right: 48px;
 }
 
 .password-toggle {
-    position: absolute;
-    top: 50%;
-    right: 14px;
-    transform: translateY(-50%);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 4px;
-    border: none;
-    background: transparent;
-
-    color: #8a9299;
-    cursor: pointer;
-    transition: color 0.2s;
+	position: absolute;
+	top: 50%;
+	right: 14px;
+	transform: translateY(-50%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 4px;
+	border: none;
+	background: transparent;
+	color: #8a9299;
+	cursor: pointer;
+	transition: color 0.2s;
 }
 
 .password-toggle:hover {
-    color: var(--lp-primary-dark);
+	color: var(--lp-primary-dark);
 }
 
 .password-toggle:focus-visible {
-    outline: 2px solid var(--lp-primary);
-    outline-offset: 3px;
-    border-radius: 5px;
+	outline: 2px solid var(--lp-primary);
+	outline-offset: 3px;
+	border-radius: 5px;
+}
+
+/* ==========================================
+   Formulario de registro
+========================================== */
+.register-form-content {
+	width: 100%;
+	max-width: 430px;
+}
+
+.register-form-content .form-heading {
+	margin-bottom: 25px;
+}
+
+.register-bottom {
+	margin-top: 25px;
+	text-align: center;
+}
+
+.register-bottom p {
+	margin-bottom: 0;
+	color: var(--lp-muted);
+	font-size: 0.87rem;
+}
+
+.register-bottom a {
+	color: var(--lp-primary-dark);
+	font-weight: 700;
+	text-decoration: none;
+	transition: color 0.2s;
+}
+
+.register-bottom a:hover {
+	color: var(--lp-primary);
+	text-decoration: underline;
+}
+
+.register-link {
+	display: inline-block;
+	margin-top: 5px;
+	color: var(--lp-primary-dark);
+	font-size: 0.9rem;
+	font-weight: 700;
+	text-decoration: none;
+	transition: color 0.2s;
+}
+
+.register-link:hover {
+	color: var(--lp-primary);
+	text-decoration: underline;
 }

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Crear cuenta | LovePaws</title>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+
+<body>
+
+	<main class="login-page">
+
+		<div class="login-container">
+
+			<!-- Panel de presentación -->
+			<section class="login-brand-panel">
+
+				<div class="brand-logo">
+					<span class="brand-icon">🐾</span> <span>LovePaws</span>
+				</div>
+
+				<div class="brand-content">
+
+					<span class="brand-label"> ÚNETE A LOVEPAWS </span>
+
+					<h1>Un nuevo comienzo puede cambiar una vida.</h1>
+
+					<p>Crea tu cuenta y comienza a conocer a las mascotas que
+						esperan encontrar una familia.</p>
+
+					<div class="brand-illustration">
+						<span>🐶</span> <span>❤️</span> <span>🐱</span>
+					</div>
+
+				</div>
+
+				<div class="brand-footer">Adopta con responsabilidad,
+					transforma una vida.</div>
+
+			</section>
+
+
+			<!-- Panel de registro -->
+			<section class="login-form-panel">
+
+				<div class="register-form-content">
+
+					<div class="form-heading">
+
+						<span class="form-icon">✨</span>
+
+						<h2>Crear cuenta</h2>
+
+						<p>Completa tus datos para registrarte como adoptante.</p>
+
+					</div>
+
+					<!-- Formulario -->
+					<form th:action="@{/registro}" th:object="${registro}"
+						method="post" class="login-form">
+
+						<!-- Errores generales -->
+						<div th:if="${#fields.hasErrors('global')}"
+							class="alert alert-danger login-alert" role="alert">
+
+							<p th:each="error : ${#fields.errors('global')}"
+								th:text="${error}" class="mb-0"></p>
+
+						</div>
+
+						<div class="row g-3">
+
+							<!-- Nombres -->
+							<div class="col-12">
+
+								<label for="nombres" class="form-label"> Nombres </label> <input
+									type="text" class="form-control login-input" id="nombres"
+									th:field="*{nombres}" placeholder="Ingresa tus nombres"
+									maxlength="80" autocomplete="given-name" required>
+
+								<div class="text-danger small mt-1"
+									th:if="${#fields.hasErrors('nombres')}" th:errors="*{nombres}">
+								</div>
+
+							</div>
+
+
+							<!-- Apellidos -->
+							<div class="col-12">
+
+								<label for="apellidos" class="form-label"> Apellidos </label> <input
+									type="text" class="form-control login-input" id="apellidos"
+									th:field="*{apellidos}" placeholder="Ingresa tus apellidos"
+									maxlength="80" autocomplete="family-name">
+
+								<div class="text-danger small mt-1"
+									th:if="${#fields.hasErrors('apellidos')}"
+									th:errors="*{apellidos}"></div>
+
+							</div>
+
+
+							<!-- Nombre de usuario -->
+							<div class="col-12">
+
+								<label for="username" class="form-label"> Nombre de
+									usuario </label> <input type="text" class="form-control login-input"
+									id="username" th:field="*{username}"
+									placeholder="Ej. rodrigo123" minlength="4" maxlength="40"
+									autocomplete="username" required>
+
+								<div class="text-danger small mt-1"
+									th:if="${#fields.hasErrors('username')}"
+									th:errors="*{username}"></div>
+
+							</div>
+
+
+							<!-- Correo electrónico -->
+							<div class="col-12">
+
+								<label for="email" class="form-label"> Correo
+									electrónico </label> <input type="email"
+									class="form-control login-input" id="email" th:field="*{email}"
+									placeholder="ejemplo@correo.com" maxlength="150"
+									autocomplete="email" required>
+
+								<div class="text-danger small mt-1"
+									th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+								</div>
+
+							</div>
+
+
+							<!-- Contraseña -->
+							<div class="col-12">
+
+								<label for="password" class="form-label"> Contraseña </label>
+
+								<div class="password-wrapper">
+
+									<input type="password" class="form-control login-input"
+										id="password" th:field="*{password}"
+										placeholder="Mínimo 8 caracteres" minlength="8" maxlength="72"
+										autocomplete="new-password" required>
+
+									<button type="button" class="password-toggle"
+										data-target="password" aria-label="Mostrar contraseña"
+										aria-pressed="false" title="Mostrar contraseña">
+
+										<svg class="eye-icon" xmlns="http://www.w3.org/2000/svg"
+											width="21" height="21" viewBox="0 0 24 24" fill="none"
+											stroke="currentColor" stroke-width="2" stroke-linecap="round"
+											stroke-linejoin="round">
+                <path
+												d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                <circle cx="12" cy="12" r="3" />
+            </svg>
+
+										<svg class="eye-slash-icon" xmlns="http://www.w3.org/2000/svg"
+											width="21" height="21" viewBox="0 0 24 24" fill="none"
+											stroke="currentColor" stroke-width="2" stroke-linecap="round"
+											stroke-linejoin="round" hidden>
+								                <path d="m3 3 18 18" />
+								                <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+								                <path
+												d="M9.9 5.2A11 11 0 0 1 12 5c6.5 0 10 7 10 7a16 16 0 0 1-3.2 4.1" />
+                							<path
+												d="M6.2 6.2C3.5 8 2 12 2 12s3.5 7 10 7a10 10 0 0 0 3-.5" />
+            					</svg>
+
+									</button>
+
+								</div>
+
+								<div class="text-danger small mt-1"
+									th:if="${#fields.hasErrors('password')}"
+									th:errors="*{password}"></div>
+
+							</div>
+
+
+							<!-- Confirmar contraseña -->
+							<div class="col-12">
+
+								<label for="confirmarPassword" class="form-label">
+									Confirmar contraseña </label>
+
+								<div class="password-wrapper">
+
+									<input type="password" class="form-control login-input"
+										id="confirmarPassword" name="confirmarPassword"
+										placeholder="Repite tu contraseña" minlength="8"
+										maxlength="72" autocomplete="new-password" required>
+
+									<button type="button" class="password-toggle"
+										data-target="confirmarPassword"
+										aria-label="Mostrar contraseña" aria-pressed="false"
+										title="Mostrar contraseña">
+
+										<svg class="eye-icon" xmlns="http://www.w3.org/2000/svg"
+											width="21" height="21" viewBox="0 0 24 24" fill="none"
+											stroke="currentColor" stroke-width="2" stroke-linecap="round"
+											stroke-linejoin="round">
+                <path
+												d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                <circle cx="12" cy="12" r="3" />
+            </svg>
+
+										<svg class="eye-slash-icon" xmlns="http://www.w3.org/2000/svg"
+											width="21" height="21" viewBox="0 0 24 24" fill="none"
+											stroke="currentColor" stroke-width="2" stroke-linecap="round"
+											stroke-linejoin="round" hidden>
+                <path d="m3 3 18 18" />
+                <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+                <path
+												d="M9.9 5.2A11 11 0 0 1 12 5c6.5 0 10 7 10 7a16 16 0 0 1-3.2 4.1" />
+                <path
+												d="M6.2 6.2C3.5 8 2 12 2 12s3.5 7 10 7a10 10 0 0 0 3-.5" />
+            </svg>
+
+									</button>
+
+								</div>
+
+							</div>
+
+						</div>
+
+
+						<!-- Botón de registro -->
+						<button type="submit" class="btn btn-login w-100 mt-4">
+
+							Crear cuenta <span class="ms-2">→</span>
+
+						</button>
+
+					</form>
+
+
+					<!-- Enlace al login -->
+					<div class="register-bottom">
+
+						<p>
+							¿Ya tienes una cuenta? <a th:href="@{/login}"> Inicia sesión
+							</a>
+						</p>
+
+					</div>
+
+				</div>
+
+			</section>
+
+		</div>
+
+
+		<!-- Footer -->
+		<footer class="login-footer">
+
+			<span>🐾 LovePaws</span> <span> © LovePaws. Todos los derechos
+				reservados. </span>
+
+		</footer>
+
+	</main>
+<script th:src="@{/js/login.js}"></script>
+</body>
+</html>

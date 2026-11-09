@@ -21,11 +21,19 @@
 	<nav class="navbar navbar-expand-lg sticky-top border-bottom shadow-sm">
 		<div class="container py-2">
 			<a class="navbar-brand brand-name" th:href="@{/gestor/dashboard}">
-				🐾 LovePaws </a> <a
-				th:href="${modoEdicion == true} ? @{/gestor/mascotas} : @{/gestor/dashboard}"
-				class="btn btn-outline-secondary btn-sm"
-				th:text="${modoEdicion == true} ? 'Volver al inventario' : 'Volver al dashboard'">
-				Volver </a>
+				🐾 LovePaws </a>
+
+			<div class="d-flex align-items-center gap-2">
+
+				<a th:href="@{/gestor/cuenta}"
+					class="btn btn-outline-secondary btn-sm" th:text="${usuarioActual}">
+					usuario </a> <a
+					th:href="${modoEdicion == true} ? @{/gestor/mascotas} : @{/gestor/dashboard}"
+					class="btn btn-outline-secondary btn-sm"
+					th:text="${modoEdicion == true} ? 'Volver al inventario' : 'Volver al dashboard'">
+					Volver </a>
+
+			</div>
 		</div>
 	</nav>
 

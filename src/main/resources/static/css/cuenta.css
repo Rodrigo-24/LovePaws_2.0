@@ -1,0 +1,207 @@
+:root {
+	--lp-primary: #e97955;
+	--lp-primary-dark: #d85f3c;
+	--lp-background: #fcf9f6;
+	--lp-text: #343a40;
+	--lp-muted: #7a858e;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	font-family: Arial, sans-serif;
+	color: var(--lp-text);
+	background: radial-gradient(circle at top left, #fff0e9, transparent 35%),
+		var(--lp-background);
+}
+
+/* Navegación */
+.navbar {
+	background-color: #fff;
+}
+
+.brand-name {
+	color: var(--lp-primary-dark);
+	font-size: 1.5rem;
+	font-weight: 800;
+}
+
+/* Encabezado */
+.section-label {
+	color: var(--lp-primary-dark);
+	font-size: 0.75rem;
+	font-weight: 800;
+	letter-spacing: 1.5px;
+}
+
+.page-title {
+	font-size: clamp(1.8rem, 4vw, 2.5rem);
+	font-weight: 800;
+	letter-spacing: -0.8px;
+}
+
+.page-description {
+	color: var(--lp-muted);
+	line-height: 1.6;
+}
+
+/* Tarjetas */
+.account-card {
+	padding: 30px;
+	background: #fff;
+	border: 1px solid #f0e8e2;
+	border-radius: 18px;
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.045);
+}
+
+.card-heading {
+	margin-bottom: 25px;
+}
+
+.card-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 43px;
+	height: 43px;
+	margin-bottom: 12px;
+	border-radius: 12px;
+	background-color: #fff1eb;
+	font-size: 1.35rem;
+}
+
+.card-heading h2 {
+	font-size: 1.3rem;
+	font-weight: 800;
+	margin-bottom: 6px;
+}
+
+.card-heading p {
+	color: var(--lp-muted);
+	font-size: 0.88rem;
+	margin-bottom: 0;
+}
+
+/* Campos */
+.form-label {
+	font-size: 0.88rem;
+	font-weight: 700;
+	margin-bottom: 8px;
+}
+
+.account-input {
+	min-height: 48px;
+	padding: 11px 14px;
+	border: 1px solid #e5e0dc;
+	border-radius: 10px;
+	background-color: #fcfbfa;
+	font-size: 0.9rem;
+}
+
+.account-input:focus {
+	background-color: #fff;
+	border-color: var(--lp-primary);
+	box-shadow: 0 0 0 0.2rem rgba(233, 121, 85, 0.13);
+}
+
+.account-input[readonly] {
+	background-color: #f5f3f1;
+	color: #70777d;
+	cursor: default;
+}
+
+.field-help {
+	display: block;
+	margin-top: 7px;
+	color: var(--lp-muted);
+	font-size: 0.76rem;
+}
+
+/* Botón */
+.btn-account {
+	width: 100%;
+	min-height: 48px;
+	border: none;
+	border-radius: 10px;
+	background-color: var(--lp-primary);
+	color: #fff;
+	font-size: 0.9rem;
+	font-weight: 800;
+	transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-account:hover {
+	background-color: var(--lp-primary-dark);
+	color: #fff;
+	transform: translateY(-1px);
+}
+
+/* Nota informativa */
+.account-note {
+	display: flex;
+	align-items: flex-start;
+	gap: 9px;
+	padding: 13px;
+	border-radius: 10px;
+	background-color: #fff8f3;
+	color: #806b5e;
+	font-size: 0.82rem;
+	line-height: 1.5;
+}
+
+/* Alertas */
+.account-alert {
+	border-radius: 10px;
+	font-size: 0.85rem;
+}
+
+/* Iconos de contraseña */
+.password-wrapper {
+	position: relative;
+}
+
+.password-wrapper .account-input {
+	padding-right: 48px;
+}
+
+.password-toggle {
+	position: absolute;
+	top: 50%;
+	right: 14px;
+	transform: translateY(-50%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 4px;
+	border: none;
+	background: transparent;
+	color: #8a9299;
+	cursor: pointer;
+}
+
+.password-toggle:hover {
+	color: var(--lp-primary-dark);
+}
+
+.password-toggle:focus-visible {
+	outline: 2px solid var(--lp-primary);
+	outline-offset: 3px;
+	border-radius: 5px;
+}
+
+/* Footer */
+.account-footer {
+	color: var(--lp-muted);
+	background-color: rgba(255, 255, 255, 0.7);
+}
+
+.account-footer p {
+	color: var(--lp-primary-dark);
+}
+
+/* Responsive */
+@media ( max-width : 767px) {
+	.account-card {
+		padding: 22px;
+	}
+}

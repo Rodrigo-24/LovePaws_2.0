@@ -27,9 +27,11 @@
 
 			<div class="d-flex align-items-center gap-3">
 
-				<span class="user-role"> <span class="role-indicator"></span>
-					Gestor
-				</span>
+				<a th:href="@{/gestor/cuenta}"
+					class="btn btn-outline-secondary btn-sm"> <span class="me-1">👤</span>
+					<span th:text="${usuarioActual}">usuario</span>
+
+				</a>
 
 				<form th:action="@{/logout}" method="post">
 					<button type="submit"
@@ -139,7 +141,8 @@
 				<!-- Mascotas disponibles -->
 				<div class="col-md-4">
 
-					<a th:href="@{/gestor/mascotas(estadoAdopcion='DISPONIBLE', estadoPublicacion='ACTIVA')}"
+					<a
+						th:href="@{/gestor/mascotas(estadoAdopcion='DISPONIBLE', estadoPublicacion='ACTIVA')}"
 						class="stat-card-link">
 
 						<article class="stat-card h-100">

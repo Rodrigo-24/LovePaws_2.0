@@ -1,41 +1,43 @@
-
 document.addEventListener("DOMContentLoaded", () => {
 
-	const passwordInput = document.getElementById("password");
-	const toggleButton = document.getElementById("togglePassword");
+	const botonesPassword = document.querySelectorAll(".password-toggle");
 
-	const eyeIcon = document.getElementById("eyeIcon");
-	const eyeSlashIcon = document.getElementById("eyeSlashIcon");
+	botonesPassword.forEach(boton => {
 
-	if (!passwordInput || !toggleButton) {
-		return;
-	}
+		const input = document.getElementById(boton.dataset.target);
 
-	toggleButton.addEventListener("click", () => {
+		const eyeIcon = boton.querySelector(".eye-icon");
+		const eyeSlashIcon = boton.querySelector(".eye-slash-icon");
 
-		const mostrarPassword = passwordInput.type === "password";
+		if (!input) return;
 
-		// Cambiar el tipo de campo
-		passwordInput.type = mostrarPassword ? "text" : "password";
+		boton.addEventListener("click", () => {
 
-		// Alternar los iconos
-		eyeIcon.hidden = mostrarPassword;
-		eyeSlashIcon.hidden = !mostrarPassword;
+			const mostrarPassword = input.type === "password";
 
-		// Actualizar accesibilidad
-		toggleButton.setAttribute(
-			"aria-label",
-			mostrarPassword ? "Ocultar contraseña" : "Mostrar contraseña"
-		);
+			// Cambiar visibilidad
+			input.type = mostrarPassword ? "text" : "password";
 
-		toggleButton.setAttribute(
-			"aria-pressed",
-			String(mostrarPassword)
-		);
+			// Cambiar iconos
+			eyeIcon.hidden = mostrarPassword;
+			eyeSlashIcon.hidden = !mostrarPassword;
 
-		toggleButton.title = mostrarPassword
-			? "Ocultar contraseña"
-			: "Mostrar contraseña";
+			// Actualizar accesibilidad
+			boton.setAttribute(
+				"aria-label",
+				mostrarPassword ? "Ocultar contraseña" : "Mostrar contraseña"
+			);
+
+			boton.setAttribute(
+				"aria-pressed",
+				String(mostrarPassword)
+			);
+
+			boton.title = mostrarPassword
+				? "Ocultar contraseña"
+				: "Mostrar contraseña";
+
+		});
 
 	});
 
