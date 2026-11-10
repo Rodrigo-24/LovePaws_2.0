@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.lovePaws.mascota.entity.Mascota;
+import com.lovePaws.usuario.entity.EstadoUsuario;
 import com.lovePaws.mascota.entity.EstadoAdopcion;
 import com.lovePaws.mascota.entity.EstadoPublicacion;
 
@@ -35,4 +36,13 @@ public interface MascotaRepository extends JpaRepository<Mascota, Long> {
 
 	List<Mascota> findByEstadoPublicacionAndEstadoAdopcionAndTipoMascota_NombreOrderByFechaRegistroDesc(
 			EstadoPublicacion estadoPublicacion, EstadoAdopcion estadoAdopcion, String nombreTipo);
+
+	// Mascotas disponibles cuyos gestores tienen cuentas activas
+	List<Mascota> findByEstadoPublicacionAndEstadoAdopcionAndRegistradoPor_EstadoOrderByFechaRegistroDesc(
+			EstadoPublicacion estadoPublicacion, EstadoAdopcion estadoAdopcion, EstadoUsuario estadoUsuario);
+
+	// Filtrar por tipo de mascota y estado de la cuenta del gestor
+	List<Mascota> findByEstadoPublicacionAndEstadoAdopcionAndTipoMascota_NombreAndRegistradoPor_EstadoOrderByFechaRegistroDesc(
+			EstadoPublicacion estadoPublicacion, EstadoAdopcion estadoAdopcion, String nombreTipo,
+			EstadoUsuario estadoUsuario);
 }

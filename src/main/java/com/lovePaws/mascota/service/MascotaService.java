@@ -33,7 +33,7 @@ import com.lovePaws.solicitud.entity.TipoEventoAdopcion;
 import com.lovePaws.solicitud.repository.EventoAdopcionRepository;
 import com.lovePaws.solicitud.repository.SolicitudAdopcionRepository;
 import com.lovePaws.mascota.repository.RazaRepository;
-
+import com.lovePaws.usuario.entity.EstadoUsuario;
 import com.lovePaws.usuario.entity.Usuario;
 import com.lovePaws.usuario.repository.UsuarioRepository;
 
@@ -119,17 +119,23 @@ public class MascotaService {
 	}
 
 	private MascotaRespuestaDTO convertirARespuesta(Mascota mascota) {
+		Usuario gestor = mascota.getRegistradoPor();
+	    String nombreGestor = gestor.getNombres() + " " + gestor.getApellidos();
+	    
 		return new MascotaRespuestaDTO(mascota.getIdMascota(), mascota.getNombre(),
 				mascota.getTipoMascota().getNombre(), mascota.getRaza() != null ? mascota.getRaza().getNombre() : null,
 				mascota.getEdadAnios(), mascota.getEdadMeses(), mascota.getSexo(), mascota.getDescripcion(),
 				mascota.getFotoUrl(), mascota.getEstadoAdopcion(), mascota.getEstadoPublicacion(),
-				mascota.getFechaRegistro());
+				mascota.getFechaRegistro(), gestor.getUsername(), nombreGestor);
 	}
 
 	@Transactional(readOnly = true)
 	public List<MascotaRespuestaDTO> listarCatalogo() {
-		List<Mascota> mascotas = mascotaRepository.findByEstadoPublicacionAndEstadoAdopcionOrderByFechaRegistroDesc(
-				EstadoPublicacion.ACTIVA, EstadoAdopcion.DISPONIBLE);
+
+		List<Mascota> mascotas = mascotaRepository
+				.findByEstadoPublicacionAndEstadoAdopcionAndRegistradoPor_EstadoOrderByFechaRegistroDesc(
+						EstadoPublicacion.ACTIVA, EstadoAdopcion.DISPONIBLE, EstadoUsuario.ACTIVO);
+
 		return mascotas.stream().map(this::convertirARespuesta).toList();
 	}
 
@@ -276,12 +282,12 @@ public class MascotaService {
 			return listarCatalogo();
 		}
 
-		// Consultar las mascotas según el tipo
+		// Consultar mascotas cuyo gestor tenga una cuenta activa
 		List<Mascota> mascotas = mascotaRepository
-				.findByEstadoPublicacionAndEstadoAdopcionAndTipoMascota_NombreOrderByFechaRegistroDesc(
-						EstadoPublicacion.ACTIVA, EstadoAdopcion.DISPONIBLE, tipo.trim().toUpperCase(Locale.ROOT));
+				.findByEstadoPublicacionAndEstadoAdopcionAndTipoMascota_NombreAndRegistradoPor_EstadoOrderByFechaRegistroDesc(
+						EstadoPublicacion.ACTIVA, EstadoAdopcion.DISPONIBLE, tipo.trim().toUpperCase(Locale.ROOT),
+						EstadoUsuario.ACTIVO);
 
-		// Convertir las entidades en DTO
 		return mascotas.stream().map(this::convertirARespuesta).toList();
 	}
 

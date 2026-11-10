@@ -16,6 +16,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
@@ -49,20 +52,27 @@ public class SecurityConfig {
 	// Autenticacion de la aplicacion web mediante sesiones
 	@Bean
 	@Order(2)
-	public SecurityFilterChain webSecurityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider)
-			throws Exception {
+	public SecurityFilterChain webSecurityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider,
+			CuentaActivaFilter cuentaActivaFilter) throws Exception {
 
 		http.authenticationProvider(authenticationProvider)
-				.authorizeHttpRequests(
-						auth -> auth.requestMatchers("/login", "/registro", "/error", "/css/**", "/js/**", "/images/**").permitAll()
-								.requestMatchers("/admin/**").hasRole("ADMIN").requestMatchers("/gestor/**")
-								.hasRole("GESTOR").requestMatchers("/adoptante/**").hasRole("ADOPTANTE")
-								.anyRequest().authenticated())
+				.addFilterBefore(cuentaActivaFilter, UsernamePasswordAuthenticationFilter.class)
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/login", "/registro", "/error", "/css/**", "/js/**", "/images/**").permitAll()
+						.requestMatchers("/admin/**").hasRole("ADMIN").requestMatchers("/gestor/**").hasRole("GESTOR")
+						.requestMatchers("/adoptante/**").hasRole("ADOPTANTE").anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login").defaultSuccessUrl("/", true)
 						.failureUrl("/login?error").permitAll())
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout")
 						.invalidateHttpSession(true).clearAuthentication(true).deleteCookies("JSESSIONID").permitAll());
 
 		return http.build();
+	}
+
+	@Bean
+	public FilterRegistrationBean<CuentaActivaFilter> cuentaActivaFilterRegistration(CuentaActivaFilter filter) {
+		FilterRegistrationBean<CuentaActivaFilter> registration = new FilterRegistrationBean<>(filter);
+		registration.setEnabled(false);
+		return registration;
 	}
 }

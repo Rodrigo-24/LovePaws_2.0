@@ -4,6 +4,7 @@ import com.lovePaws.mascota.entity.Mascota;
 import com.lovePaws.mascota.entity.EstadoAdopcion;
 import com.lovePaws.mascota.entity.EstadoPublicacion;
 import com.lovePaws.mascota.repository.MascotaRepository;
+import com.lovePaws.usuario.entity.EstadoUsuario;
 import com.lovePaws.usuario.entity.Usuario;
 import com.lovePaws.usuario.repository.UsuarioRepository;
 import com.lovePaws.solicitud.dto.CrearSolicitudDTO;
@@ -81,9 +82,19 @@ public class SolicitudAdopcionService {
 			throw new DatoInvalidoException("La mascota no está disponible para recibir solicitudes.");
 		}
 
+		// Verificar que el gestor responsable tenga una cuenta activa
+		if (mascota.getRegistradoPor().getEstado() != EstadoUsuario.ACTIVO) {
+			throw new DatoInvalidoException("La mascota no está disponible para recibir solicitudes.");
+		}
+
 		// 3. Buscar al adoptante autenticado
 		Usuario adoptante = usuarioRepository.findByUsername(username)
 				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el usuario: " + username));
+
+		// Verificar que el adoptante tenga una cuenta activa
+		if (adoptante.getEstado() != EstadoUsuario.ACTIVO) {
+			throw new DatoInvalidoException("Tu cuenta no se encuentra activa y no puedes enviar solicitudes.");
+		}
 
 		// 4. Comprobar solicitudes pendientes duplicadas
 		boolean existeSolicitud = solicitudRepository.existsByMascota_IdMascotaAndAdoptante_IdUsuarioAndEstado(
@@ -168,7 +179,7 @@ public class SolicitudAdopcionService {
 			respuestas.add(respuesta);
 		}
 		respuestaSolicitudRepository.saveAll(respuestas);
-		
+
 		return new SolicitudAdopcionRespuestaDTO(solicitudGuardada.getIdSolicitud(),
 				solicitudGuardada.getMascota().getIdMascota(), solicitudGuardada.getMascota().getNombre(),
 				solicitudGuardada.getMascota().getTipoMascota().getNombre(), solicitudGuardada.getFechaSolicitud(),
@@ -224,7 +235,8 @@ public class SolicitudAdopcionService {
 				solicitud.getMascota().getNombre(), solicitud.getMascota().getTipoMascota().getNombre(),
 				solicitud.getMascota().getFotoUrl(), solicitud.getAdoptante().getNombres(),
 				solicitud.getAdoptante().getApellidos(), solicitud.getAdoptante().getEmail(),
-				solicitud.getFechaSolicitud(), solicitud.getEstado(), respuestas);
+				solicitud.getFechaSolicitud(), solicitud.getEstado(), solicitud.getFechaResolucion(),
+				obtenerNombreResponsable(solicitud), solicitud.getObservacionResolucion(), respuestas);
 	}
 
 	@Transactional(readOnly = true)
@@ -414,7 +426,8 @@ public class SolicitudAdopcionService {
 				solicitud.getMascota().getNombre(), solicitud.getMascota().getTipoMascota().getNombre(),
 				solicitud.getMascota().getFotoUrl(), solicitud.getAdoptante().getNombres(),
 				solicitud.getAdoptante().getApellidos(), solicitud.getAdoptante().getEmail(),
-				solicitud.getFechaSolicitud(), solicitud.getEstado(), respuestas);
+				solicitud.getFechaSolicitud(), solicitud.getEstado(), solicitud.getFechaResolucion(),
+				obtenerNombreResponsable(solicitud), solicitud.getObservacionResolucion(), respuestas);
 	}
 
 	@Transactional(readOnly = true)
@@ -553,6 +566,21 @@ public class SolicitudAdopcionService {
 		}
 		return new EventoAdopcionDTO(evento.getIdEvento(), evento.getTipoEvento(), evento.getDetalle(), nombreActor,
 				evento.getFechaEvento());
+	}
+
+	private String obtenerNombreResponsable(SolicitudAdopcion solicitud) {
+		Usuario responsable = solicitud.getResueltoPor();
+
+		if (responsable == null) {
+			return null;
+		}
+		String nombre = responsable.getNombres();
+
+		if (responsable.getApellidos() != null && !responsable.getApellidos().isBlank()) {
+			nombre += " " + responsable.getApellidos();
+		}
+
+		return nombre;
 	}
 
 }

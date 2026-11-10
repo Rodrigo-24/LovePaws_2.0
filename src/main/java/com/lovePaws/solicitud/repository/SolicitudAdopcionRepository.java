@@ -32,5 +32,10 @@ public interface SolicitudAdopcionRepository extends JpaRepository<SolicitudAdop
 	// Obtener y bloquear las solicitudes pendientes de una mascota
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT s FROM SolicitudAdopcion s WHERE s.mascota.idMascota = :idMascota AND s.estado = :estado")
-	List<SolicitudAdopcion> buscarPorMascotaYEstadoConBloqueo(@Param("idMascota") Long idMascota, @Param("estado") EstadoSolicitud estado);
+	List<SolicitudAdopcion> buscarPorMascotaYEstadoConBloqueo(@Param("idMascota") Long idMascota,
+			@Param("estado") EstadoSolicitud estado);
+
+	// Consultar las solicitudes pendientes de un adoptante
+	List<SolicitudAdopcion> findByAdoptante_IdUsuarioAndEstadoOrderByFechaSolicitudDesc(Long idAdoptante,
+			EstadoSolicitud estado);
 }

@@ -23,6 +23,7 @@ import com.lovePaws.mascota.service.MascotaService;
 import com.lovePaws.solicitud.dto.CrearSolicitudDTO;
 import com.lovePaws.solicitud.dto.PreguntaSolicitudDTO;
 import com.lovePaws.solicitud.dto.RespuestaSolicitudDTO;
+import com.lovePaws.solicitud.dto.SolicitudAdopcionDetalleDTO;
 import com.lovePaws.solicitud.service.SolicitudAdopcionService;
 
 @Controller
@@ -112,8 +113,18 @@ public class SolicitudAdopcionAdoptanteWebController {
 		}
 	}
 
+	// Mostrar el detalle de una solicitud del adoptante
+	@GetMapping("/adoptante/solicitudes/{id}/detalle")
+	public String verDetalleSolicitud(@PathVariable Long id, Authentication authentication, Model model) {
+		SolicitudAdopcionDetalleDTO solicitud = solicitudService.obtenerDetalleSolicitud(id, authentication.getName());
+		model.addAttribute("solicitud", solicitud);
+
+		return "adoptante/solicitud-detalle";
+	}
+
 	// Recuperar el formulario cuando ocurre un error
-	private String volverAlFormulario(Long idMascota, String mensaje, Model model, RedirectAttributes redirectAttributes) {
+	private String volverAlFormulario(Long idMascota, String mensaje, Model model,
+			RedirectAttributes redirectAttributes) {
 		try {
 			// Volver a comprobar que la mascota siga disponible
 			MascotaRespuestaDTO mascota = mascotaService.buscarMascotaDisponible(idMascota);

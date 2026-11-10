@@ -1,0 +1,372 @@
+:root {
+	--lp-primary: #e97955;
+	--lp-primary-dark: #d85f3c;
+	--lp-background: #fcf9f6;
+	--lp-text: #343a40;
+	--lp-muted: #7a858e;
+}
+
+body {
+	background-color: var(--lp-background);
+	color: var(--lp-text);
+	font-family: Arial, sans-serif;
+}
+
+/* Navegación */
+.navbar {
+	background-color: #fff;
+}
+
+.brand-name {
+	color: var(--lp-primary);
+	font-size: 1.5rem;
+	font-weight: 800;
+	letter-spacing: -1px;
+}
+
+.btn-logout {
+	border-radius: 10px;
+	font-weight: 600;
+}
+
+/* Encabezado */
+.section-label {
+	color: var(--lp-primary-dark);
+	font-size: 0.78rem;
+	font-weight: 800;
+	letter-spacing: 2px;
+}
+
+.page-title {
+	font-size: clamp(2rem, 5vw, 2.8rem);
+	font-weight: 800;
+	letter-spacing: -1px;
+}
+
+/* Gestor responsable */
+.pet-registrant {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	margin-top: 14px;
+	padding: 12px;
+	background-color: #fff7f2;
+	border-radius: 10px;
+}
+
+.registrant-label {
+	color: var(--lp-muted);
+	font-size: 0.72rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.6px;
+}
+
+.pet-registrant strong {
+	color: var(--lp-text);
+	font-size: 0.88rem;
+}
+
+.pet-registrant small {
+	color: var(--lp-primary-dark);
+	font-size: 0.78rem;
+}
+
+.page-description {
+	color: var(--lp-muted);
+	line-height: 1.7;
+	margin-bottom: 0;
+}
+
+/* Enlaces y botones */
+.btn-admin {
+	background-color: var(--lp-primary);
+	color: #fff;
+	border: none;
+	border-radius: 10px;
+	padding: 9px 16px;
+	font-weight: 700;
+}
+
+.btn-admin:hover {
+	background-color: var(--lp-primary-dark);
+	color: #fff;
+}
+
+/* Filtros */
+.filter-section, .filters-card {
+	background-color: #fff;
+	border: 1px solid #eee9e5;
+	border-radius: 16px;
+	padding: 22px;
+}
+
+.filter-label {
+	color: var(--lp-muted);
+	font-size: 0.88rem;
+	font-weight: 700;
+}
+
+.filter-section .form-select, .filters-card .form-select {
+	border-color: #e5e0dc;
+	border-radius: 10px;
+	padding: 10px 14px;
+	color: var(--lp-text);
+	font-size: 0.9rem;
+}
+
+.filter-section .form-select:focus, .filters-card .form-select:focus {
+	border-color: var(--lp-primary);
+	box-shadow: 0 0 0 0.2rem rgba(233, 121, 85, 0.15);
+}
+
+.btn-filter {
+	background-color: var(--lp-primary);
+	color: #fff;
+	border: none;
+	border-radius: 10px;
+	padding: 11px 18px;
+	font-weight: 800;
+	transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-filter:hover {
+	background-color: var(--lp-primary-dark);
+	color: #fff;
+	transform: translateY(-2px);
+}
+
+.clear-filters {
+	color: var(--lp-primary-dark);
+	font-size: 0.85rem;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.clear-filters:hover {
+	text-decoration: underline;
+}
+
+/* Resumen */
+.summary-card {
+	background-color: #fff;
+	border: 1px solid #eee9e5;
+	border-radius: 16px;
+	padding: 23px;
+}
+
+.total-counter {
+	background-color: #fff0e9;
+	color: var(--lp-primary-dark);
+	padding: 10px 16px;
+	border-radius: 30px;
+	font-size: 0.85rem;
+	font-weight: 800;
+}
+
+/* Tarjetas de mascotas */
+.pet-card {
+	background-color: #fff;
+	border: 1px solid #eee9e5;
+	border-radius: 18px;
+	overflow: hidden;
+	transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.pet-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 12px 28px rgba(0, 0, 0, 0.07);
+}
+
+/* Fotografía */
+.pet-image-container {
+	height: 230px;
+	overflow: hidden;
+	background-color: #f4ede8;
+}
+
+.pet-photo {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.3s;
+}
+
+.pet-card:hover .pet-photo {
+	transform: scale(1.04);
+}
+
+.pet-photo-placeholder {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	color: var(--lp-muted);
+	font-size: 0.85rem;
+}
+
+.placeholder-icon {
+	font-size: 2.8rem;
+}
+
+/* Identificación */
+.pet-type {
+	padding: 6px 11px;
+	border-radius: 20px;
+	font-size: 0.72rem;
+	font-weight: 800;
+}
+
+.pet-type-dog {
+	background-color: #fff0df;
+	color: #ad6829;
+}
+
+.pet-type-cat {
+	background-color: #edf0ff;
+	color: #5966a8;
+}
+
+.pet-id {
+	color: #a1a7ad;
+	font-size: 0.75rem;
+}
+
+.pet-name {
+	font-size: 1.4rem;
+	font-weight: 800;
+}
+
+.pet-breed {
+	color: var(--lp-muted);
+	font-size: 0.88rem;
+}
+
+/* Información */
+.pet-information {
+	border-top: 1px solid #f0ece9;
+	padding-top: 15px;
+}
+
+.pet-information strong {
+	font-size: 0.85rem;
+}
+
+.pet-information span {
+	color: var(--lp-muted);
+	font-size: 0.82rem;
+}
+
+/* Estados */
+.status-container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 7px;
+	border-top: 1px solid #f0ece9;
+	padding-top: 15px;
+}
+
+.status-badge {
+	display: inline-block;
+	padding: 7px 11px;
+	border-radius: 20px;
+	font-size: 0.7rem;
+	font-weight: 800;
+}
+
+.status-available {
+	background-color: #e7f5eb;
+	color: #34804c;
+}
+
+.status-adopted {
+	background-color: #e8efff;
+	color: #4866a8;
+}
+
+.status-active {
+	background-color: #edf0ff;
+	color: #5966a8;
+}
+
+.status-blocked {
+	background-color: #fdebea;
+	color: #bf4b46;
+}
+
+/* Estado vacío */
+.empty-state {
+	background-color: #fff;
+	border: 1px dashed #e4d9e1;
+	border-radius: 20px;
+	padding: 60px 25px;
+	text-align: center;
+}
+
+.empty-icon {
+	font-size: 3.5rem;
+	margin-bottom: 20px;
+}
+
+.empty-state h3 {
+	font-weight: 800;
+}
+
+.empty-state p {
+	color: var(--lp-muted);
+	max-width: 500px;
+	margin: 12px auto;
+	line-height: 1.7;
+}
+
+/* Footer */
+.footer {
+	background-color: #fff;
+	border-top: 1px solid #eee9e5;
+	color: var(--lp-muted);
+}
+
+.footer-brand {
+	color: var(--lp-primary);
+	font-size: 1.4rem;
+	font-weight: 800;
+}
+
+/* Responsive */
+@media ( max-width : 767px) {
+	.pet-image-container {
+		height: 250px;
+	}
+	.summary-card, .filter-section, .filters-card {
+		padding: 20px;
+	}
+}
+
+/* Acciones administrativas */
+.pet-actions {
+	border-top: 1px solid #f0ece9;
+	padding-top: 15px;
+}
+
+.pet-actions .btn {
+	border-radius: 10px;
+	padding: 10px;
+	font-size: 0.85rem;
+	font-weight: 700;
+}
+
+#confirmarAccionMascotaModal .modal-content {
+	border-radius: 18px;
+}
+
+#confirmarAccionMascotaModal .modal-title {
+	color: var(--lp-text);
+}
+
+#confirmarAccionMascotaModal .modal-footer .btn {
+	border-radius: 10px;
+	font-weight: 700;
+}

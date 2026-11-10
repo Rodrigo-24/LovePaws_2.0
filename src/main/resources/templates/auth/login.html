@@ -55,6 +55,15 @@
 				<div class="login-form-content">
 
 					<div class="form-heading">
+					
+						<!-- Aviso de cuenta bloqueada -->
+						<div th:if="${param.blocked}"
+							class="alert alert-warning login-alert" role="alert">
+
+							<strong>Tu cuenta ha sido bloqueada.</strong> Tu sesión se cerró
+							porque un administrador bloqueó tu cuenta. No podrás iniciar
+							sesión hasta que sea reactivada.
+						</div>
 
 						<span class="form-icon">👋</span>
 
@@ -105,9 +114,10 @@
 									placeholder="Ingresa tu contraseña"
 									autocomplete="current-password" required>
 
-								<button type="button" data-target="password" class="password-toggle"
-									id="togglePassword" aria-label="Mostrar contraseña"
-									aria-pressed="false" title="Mostrar contraseña">
+								<button type="button" data-target="password"
+									class="password-toggle" id="togglePassword"
+									aria-label="Mostrar contraseña" aria-pressed="false"
+									title="Mostrar contraseña">
 
 									<!-- Icono de ojo -->
 									<svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="21"

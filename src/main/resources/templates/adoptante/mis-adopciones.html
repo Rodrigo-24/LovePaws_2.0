@@ -149,52 +149,57 @@
 
 				<div class="col-12" th:each="solicitud : ${solicitudes}">
 
-					<article class="request-card">
+					<a
+						th:href="@{/adoptante/solicitudes/{id}/detalle(id=${solicitud.idSolicitud})}"
+						class="request-card-link">
 
-						<div class="row align-items-center g-3">
+						<article class="request-card">
 
-							<!-- Informacion de la mascota -->
-							<div class="col-md-5">
+							<div class="row align-items-center g-3">
 
-								<h3 class="pet-name mt-2 mb-1"
-									th:text="${solicitud.nombreMascota}">Mauro</h3>
+								<!-- Informacion de la mascota -->
+								<div class="col-md-5">
 
-								<span class="pet-type-badge" th:text="${solicitud.tipoMascota}">
-									GATO </span>
+									<h3 class="pet-name mt-2 mb-1"
+										th:text="${solicitud.nombreMascota}">Mauro</h3>
+
+									<span class="pet-type-badge" th:text="${solicitud.tipoMascota}">
+										GATO </span>
+
+								</div>
+
+
+								<!-- Fecha -->
+								<div class="col-md-4">
+
+									<span class="information-label"> Fecha de solicitud </span>
+
+									<p class="information-value mb-0"
+										th:text="${#temporals.format(solicitud.fechaSolicitud, 'dd/MM/yyyy HH:mm')}">
+									</p>
+
+								</div>
+
+
+								<!-- Estado y accion -->
+								<div class="col-md-3 text-md-end">
+
+									<span class="information-label d-block mb-2"> Estado de
+										solicitud </span> <span
+										th:if="${solicitud.estado.name() == 'PENDIENTE'}"
+										class="status-badge status-pending"> Pendiente </span> <span
+										th:if="${solicitud.estado.name() == 'APROBADA'}"
+										class="status-badge status-approved"> Aprobada </span> <span
+										th:if="${solicitud.estado.name() == 'RECHAZADA'}"
+										class="status-badge status-rejected"> Rechazada </span>
+
+								</div>
 
 							</div>
 
-
-							<!-- Fecha -->
-							<div class="col-md-4">
-
-								<span class="information-label"> Fecha de solicitud </span>
-
-								<p class="information-value mb-0"
-									th:text="${#temporals.format(solicitud.fechaSolicitud, 'dd/MM/yyyy HH:mm')}">
-								</p>
-
-							</div>
-
-
-							<!-- Estado y accion -->
-							<div class="col-md-3 text-md-end">
-
-								<span class="information-label d-block mb-2"> Estado de
-									solicitud </span> <span
-									th:if="${solicitud.estado.name() == 'PENDIENTE'}"
-									class="status-badge status-pending"> Pendiente </span> <span
-									th:if="${solicitud.estado.name() == 'APROBADA'}"
-									class="status-badge status-approved"> Aprobada </span> <span
-									th:if="${solicitud.estado.name() == 'RECHAZADA'}"
-									class="status-badge status-rejected"> Rechazada </span>
-
-							</div>
-
-						</div>
-
-					</article>
-
+						</article>
+						
+					</a>
 				</div>
 
 			</div>

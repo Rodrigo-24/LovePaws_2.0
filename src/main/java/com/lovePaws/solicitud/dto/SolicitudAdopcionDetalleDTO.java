@@ -21,11 +21,16 @@ public class SolicitudAdopcionDetalleDTO {
 	private LocalDateTime fechaSolicitud;
 	private EstadoSolicitud estado;
 
+	private LocalDateTime fechaResolucion;
+	private String nombreResponsable;
+	private String observacionResolucion;
+
 	private List<RespuestaSolicitudDetalleDTO> respuestas;
 
 	public SolicitudAdopcionDetalleDTO(Long idSolicitud, Long idMascota, String nombreMascota, String tipoMascota,
 			String fotoMascotaUrl, String nombresAdoptante, String apellidosAdoptante, String correoAdoptante,
-			LocalDateTime fechaSolicitud, EstadoSolicitud estado, List<RespuestaSolicitudDetalleDTO> respuestas) {
+			LocalDateTime fechaSolicitud, EstadoSolicitud estado, LocalDateTime fechaResolucion, 
+			String nombreResponsable, String observacionResolucion, List<RespuestaSolicitudDetalleDTO> respuestas) {
 		this.idSolicitud = idSolicitud;
 		this.idMascota = idMascota;
 		this.nombreMascota = nombreMascota;
@@ -36,6 +41,9 @@ public class SolicitudAdopcionDetalleDTO {
 		this.correoAdoptante = correoAdoptante;
 		this.fechaSolicitud = fechaSolicitud;
 		this.estado = estado;
+		this.fechaResolucion = fechaResolucion;
+		this.nombreResponsable = nombreResponsable;
+		this.observacionResolucion = observacionResolucion;
 		this.respuestas = respuestas;
 	}
 
@@ -81,5 +89,17 @@ public class SolicitudAdopcionDetalleDTO {
 
 	public List<RespuestaSolicitudDetalleDTO> getRespuestas() {
 		return respuestas;
+	}
+
+	public LocalDateTime getFechaResolucion() {
+		return fechaResolucion;
+	}
+
+	public String getNombreResponsable() {
+		return nombreResponsable;
+	}
+
+	public String getObservacionResolucion() {
+		return observacionResolucion;
 	}
 }

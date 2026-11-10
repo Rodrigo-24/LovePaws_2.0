@@ -1,0 +1,351 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Detalle de solicitud | LovePaws</title>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<link rel="stylesheet" th:href="@{/css/detalle-solicitud-adoptante.css}">
+</head>
+
+<body>
+
+	<!-- Navegación -->
+	<nav class="navbar navbar-expand-lg sticky-top border-bottom shadow-sm">
+		<div class="container py-2">
+
+			<a class="navbar-brand brand-name" th:href="@{/adoptante/catalogo}">
+				🐾 LovePaws </a>
+
+			<div
+				class="d-flex flex-column flex-lg-row
+                        align-items-lg-center gap-2">
+
+				<a class="btn btn-outline-secondary btn-sm"
+					th:href="@{/adoptante/mis-adopciones}"> Mis adopciones </a> <a
+					class="btn btn-outline-secondary btn-sm"
+					th:href="@{/adoptante/cuenta}" th:text="${usuarioActual}">
+					usuario </a>
+
+				<form th:action="@{/logout}" method="post">
+					<button type="submit"
+						class="btn btn-outline-danger btn-sm btn-logout">Cerrar
+						sesión</button>
+				</form>
+
+			</div>
+		</div>
+	</nav>
+
+
+	<main class="container py-5">
+
+		<!-- Encabezado -->
+		<section class="page-header mb-4">
+
+			<a th:href="@{/adoptante/mis-adopciones}" class="back-link"> ←
+				Volver a mis adopciones </a> <span class="section-label d-block mt-4">
+				DETALLE DE SOLICITUD </span>
+
+			<div
+				class="d-flex flex-column flex-md-row
+                        justify-content-between align-items-md-center gap-3 mt-2">
+
+				<div>
+					<h1 class="page-title"
+						th:text="${'Solicitud #' + solicitud.idSolicitud}">Solicitud
+						#1</h1>
+
+					<p class="page-description mb-0">Consulta las respuestas que
+						registraste y el resultado de la evaluación de tu solicitud.</p>
+				</div>
+
+				<!-- Estado -->
+				<div>
+					<span th:if="${solicitud.estado.name() == 'PENDIENTE'}"
+						class="status-badge status-pending"> Pendiente </span> <span
+						th:if="${solicitud.estado.name() == 'APROBADA'}"
+						class="status-badge status-approved"> Aprobada </span> <span
+						th:if="${solicitud.estado.name() == 'RECHAZADA'}"
+						class="status-badge status-rejected"> Rechazada </span>
+				</div>
+
+			</div>
+
+		</section>
+
+
+		<!-- Información de la solicitud -->
+		<section class="row g-4 mb-5">
+
+			<!-- Mascota -->
+			<div class="col-lg-7">
+
+				<article class="information-card h-100">
+
+					<div class="card-heading">
+						<span class="heading-icon">🐾</span>
+
+						<div>
+							<h2>Mascota solicitada</h2>
+							<p>Información de tu futuro compañero.</p>
+						</div>
+					</div>
+
+					<div class="pet-information">
+
+						<div class="pet-image-container">
+
+							<img
+								th:if="${solicitud.fotoMascotaUrl != null
+                                    and !#strings.isEmpty(solicitud.fotoMascotaUrl)}"
+								th:src="${solicitud.fotoMascotaUrl}"
+								th:alt="${'Fotografía de ' + solicitud.nombreMascota}"
+								class="pet-photo">
+
+							<div
+								th:unless="${solicitud.fotoMascotaUrl != null
+                                    and !#strings.isEmpty(solicitud.fotoMascotaUrl)}"
+								class="pet-photo-placeholder">
+								<span>🐾</span> <small>Sin fotografía</small>
+							</div>
+
+						</div>
+
+						<div>
+							<span class="pet-type" th:text="${solicitud.tipoMascota}">
+								GATO </span>
+
+							<h3 class="pet-name mt-2" th:text="${solicitud.nombreMascota}">
+								Mauro</h3>
+
+							<small class="text-muted"
+								th:text="${'ID de mascota: ' + solicitud.idMascota}"> ID
+								de mascota: 1 </small>
+						</div>
+
+					</div>
+
+				</article>
+
+			</div>
+
+
+			<!-- Fechas -->
+			<div class="col-lg-5">
+
+				<article class="information-card h-100">
+
+					<div class="card-heading">
+						<span class="heading-icon">📅</span>
+
+						<div>
+							<h2>Fechas importantes</h2>
+							<p>Seguimiento de tu solicitud.</p>
+						</div>
+					</div>
+
+					<div class="date-information">
+
+						<div class="date-item">
+							<span class="information-label"> Fecha de solicitud </span> <strong
+								th:text="${#temporals.format(
+                                    solicitud.fechaSolicitud,
+                                    'dd/MM/yyyy - HH:mm')}">
+								09/11/2026 - 10:30 </strong>
+						</div>
+
+						<div class="date-item"
+							th:if="${solicitud.fechaResolucion != null}">
+
+							<span class="information-label"> Fecha de resolución </span> <strong
+								th:text="${#temporals.format(
+                                    solicitud.fechaResolucion,
+                                    'dd/MM/yyyy - HH:mm')}">
+								09/11/2026 - 12:30 </strong>
+						</div>
+
+						<div class="date-item"
+							th:unless="${solicitud.fechaResolucion != null}">
+
+							<span class="information-label"> Fecha de resolución </span> <strong
+								class="text-muted"> Pendiente de resolución </strong>
+						</div>
+
+					</div>
+
+				</article>
+
+			</div>
+
+		</section>
+
+
+		<!-- Respuestas del adoptante -->
+		<section class="content-section mb-5">
+
+			<div class="section-heading mb-4">
+
+				<span class="section-label"> TU INFORMACIÓN </span>
+
+				<h2 class="mt-2">Mis respuestas</h2>
+
+				<p>Estas son las respuestas que proporcionaste al enviar tu
+					solicitud de adopción.</p>
+
+			</div>
+
+			<div th:if="${#lists.isEmpty(solicitud.respuestas)}"
+				class="empty-state">
+
+				<span class="empty-icon">📝</span>
+
+				<h3>Sin respuestas registradas</h3>
+
+				<p>Esta solicitud no contiene respuestas disponibles.</p>
+
+			</div>
+
+			<div th:unless="${#lists.isEmpty(solicitud.respuestas)}"
+				class="d-flex flex-column gap-3">
+
+				<article class="answer-card"
+					th:each="respuesta, iterStat : ${solicitud.respuestas}">
+
+					<span class="answer-number"
+						th:text="${'Pregunta ' + iterStat.count}"> Pregunta 1 </span>
+
+					<h3 th:text="${respuesta.pregunta}">¿Por qué deseas adoptar
+						esta mascota?</h3>
+
+					<div class="answer-content">
+
+						<span class="information-label"> Tu respuesta </span>
+
+						<p th:text="${respuesta.respuesta}">Respuesta registrada.</p>
+
+					</div>
+
+				</article>
+
+			</div>
+
+		</section>
+
+
+		<!-- Respuesta del responsable -->
+		<section class="content-section">
+
+			<div class="section-heading mb-4">
+
+				<span class="section-label"> RESULTADO DE LA EVALUACIÓN </span>
+
+				<h2 class="mt-2">Respuesta del responsable</h2>
+
+				<p>Aquí puedes consultar el resultado y las observaciones
+					relacionadas con tu solicitud.</p>
+
+			</div>
+
+
+			<!-- Solicitud pendiente -->
+			<article th:if="${solicitud.estado.name() == 'PENDIENTE'}"
+				class="evaluation-card evaluation-pending">
+
+				<div class="evaluation-icon">⏳</div>
+
+				<div>
+					<h3>Tu solicitud está siendo revisada</h3>
+
+					<p>El responsable todavía no ha emitido una respuesta. Cuando
+						se resuelva tu solicitud, podrás consultar aquí el resultado y su
+						observación.</p>
+				</div>
+
+			</article>
+
+
+			<!-- Solicitud resuelta -->
+			<article th:unless="${solicitud.estado.name() == 'PENDIENTE'}"
+				class="evaluation-card">
+
+				<div class="evaluation-icon"
+					th:text="${solicitud.estado.name() == 'APROBADA' ? '✅' : '📩'}">
+					📩</div>
+
+				<div class="evaluation-details">
+
+					<h3
+						th:text="${solicitud.estado.name() == 'APROBADA'
+                            ? '¡Tu solicitud fue aprobada!'
+                            : 'Tu solicitud fue rechazada'}">
+						Resultado de la solicitud</h3>
+
+					<p class="responsible-name"
+						th:if="${solicitud.nombreResponsable != null}">
+						Resuelto por: <strong th:text="${solicitud.nombreResponsable}">
+							Nombre del responsable </strong>
+					</p>
+
+					<div class="observation-content">
+
+						<span class="information-label"> Observación del
+							responsable </span>
+
+						<p
+							th:if="${solicitud.observacionResolucion != null
+                                and !#strings.isEmpty(solicitud.observacionResolucion)}"
+							th:text="${solicitud.observacionResolucion}">Observación
+							registrada.</p>
+
+						<p
+							th:unless="${solicitud.observacionResolucion != null
+                                and !#strings.isEmpty(solicitud.observacionResolucion)}"
+							class="text-muted mb-0">No se agregó una observación
+							adicional para esta resolución.</p>
+
+					</div>
+
+				</div>
+
+			</article>
+
+		</section>
+
+
+		<!-- Acción inferior -->
+		<div class="bottom-actions mt-5">
+
+			<a th:href="@{/adoptante/mis-adopciones}" class="btn btn-love">
+				Volver a mis adopciones </a>
+
+		</div>
+
+	</main>
+
+
+	<!-- Footer -->
+	<footer class="footer py-4 mt-5">
+
+		<div class="container text-center">
+			<p class="footer-brand mb-1">🐾 LovePaws</p>
+			<small>Cada mascota merece un hogar lleno de amor.</small>
+		</div>
+
+	</footer>
+
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+		
+	</script>
+
+</body>
+</html>

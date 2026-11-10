@@ -20,10 +20,12 @@ public class MascotaRespuestaDTO {
 	private EstadoAdopcion estadoAdopcion;
 	private EstadoPublicacion estadoPublicacion;
 	private LocalDateTime fechaRegistro;
+	private String usernameGestor;
+	private String nombreGestor;
 
 	public MascotaRespuestaDTO(Long idMascota, String nombre, String tipoMascota, String raza, Integer edadAnios,
 			Short edadMeses, SexoMascota sexo, String descripcion, String fotoUrl, EstadoAdopcion estadoAdopcion,
-			EstadoPublicacion estadoPublicacion, LocalDateTime fechaRegistro) {
+			EstadoPublicacion estadoPublicacion, LocalDateTime fechaRegistro, String usernameGestor, String nombreGestor) {
 		this.idMascota = idMascota;
 		this.nombre = nombre;
 		this.tipoMascota = tipoMascota;
@@ -36,6 +38,8 @@ public class MascotaRespuestaDTO {
 		this.estadoAdopcion = estadoAdopcion;
 		this.estadoPublicacion = estadoPublicacion;
 		this.fechaRegistro = fechaRegistro;
+		this.usernameGestor = usernameGestor;
+		this.nombreGestor = nombreGestor;
 	}
 
 
@@ -85,5 +89,13 @@ public class MascotaRespuestaDTO {
 
 	public LocalDateTime getFechaRegistro() {
 		return fechaRegistro;
+	}
+	
+	public String getUsernameGestor() {
+	    return usernameGestor;
+	}
+
+	public String getNombreGestor() {
+	    return nombreGestor;
 	}
 }
