@@ -1,0 +1,269 @@
+:root {
+	--lp-primary: #e97955;
+	--lp-primary-dark: #d85f3c;
+	--lp-background: #fcf9f6;
+	--lp-text: #343a40;
+	--lp-muted: #7a858e;
+}
+
+body {
+	background-color: var(--lp-background);
+	color: var(--lp-text);
+	font-family: Arial, sans-serif;
+}
+
+/* Navegación */
+.navbar {
+	background-color: #fff;
+}
+
+.brand-name {
+	color: var(--lp-primary);
+	font-size: 1.5rem;
+	font-weight: 800;
+	letter-spacing: -1px;
+}
+
+.navbar .btn {
+	border-radius: 10px;
+	font-weight: 600;
+}
+
+/* Encabezado */
+.section-label {
+	color: var(--lp-primary-dark);
+	font-size: 0.78rem;
+	font-weight: 800;
+	letter-spacing: 2px;
+}
+
+.page-title {
+	font-size: clamp(2rem, 5vw, 2.8rem);
+	font-weight: 800;
+	letter-spacing: -1px;
+}
+
+.page-description {
+	color: var(--lp-muted);
+	line-height: 1.7;
+	margin-bottom: 0;
+}
+
+/* Filtros */
+.filter-section {
+	background-color: #fff;
+	border: 1px solid #eee9e5;
+	border-radius: 16px;
+	padding: 25px;
+}
+
+.form-label {
+	color: #59616a;
+	font-size: 0.88rem;
+	font-weight: 700;
+}
+
+.form-select {
+	border-color: #e5e0dc;
+	border-radius: 10px;
+	padding: 11px 13px;
+}
+
+.form-select:focus {
+	border-color: var(--lp-primary);
+	box-shadow: 0 0 0 0.2rem rgba(233, 121, 85, 0.15);
+}
+
+.btn-filter {
+	background-color: var(--lp-primary);
+	color: #fff;
+	border: none;
+	border-radius: 10px;
+	padding: 11px 18px;
+	font-weight: 800;
+	transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-filter:hover {
+	background-color: var(--lp-primary-dark);
+	color: #fff;
+	transform: translateY(-2px);
+}
+
+.clear-filters {
+	color: var(--lp-primary-dark);
+	font-size: 0.85rem;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.clear-filters:hover {
+	text-decoration: underline;
+}
+
+/* Resumen */
+.summary-card {
+	background-color: #fff;
+	border: 1px solid #eee9e5;
+	border-radius: 16px;
+	padding: 23px;
+}
+
+.total-counter {
+	background-color: #fff0e9;
+	color: var(--lp-primary-dark);
+	padding: 10px 16px;
+	border-radius: 30px;
+	font-size: 0.85rem;
+	font-weight: 800;
+}
+
+/* Tarjetas de solicitudes */
+.request-card {
+	background-color: #fff;
+	border: 1px solid #eee9e5;
+	border-radius: 18px;
+	padding: 26px;
+	transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.request-card:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+.request-id {
+	color: var(--lp-muted);
+	font-size: 0.78rem;
+	font-weight: 700;
+}
+
+.pet-name {
+	color: var(--lp-text);
+	font-size: 1.35rem;
+	font-weight: 800;
+}
+
+.pet-type {
+	display: inline-block;
+	background-color: #fff0e9;
+	color: var(--lp-primary-dark);
+	padding: 6px 12px;
+	border-radius: 20px;
+	font-size: 0.73rem;
+	font-weight: 800;
+}
+
+/* Información */
+.information-label {
+	display: block;
+	color: var(--lp-muted);
+	font-size: 0.78rem;
+	font-weight: 700;
+	margin-bottom: 7px;
+}
+
+.information-value {
+	color: var(--lp-text);
+	font-size: 0.88rem;
+	font-weight: 600;
+	line-height: 1.5;
+}
+
+/* Estados */
+.status-badge {
+	display: inline-block;
+	padding: 8px 12px;
+	border-radius: 20px;
+	font-size: 0.75rem;
+	font-weight: 800;
+	white-space: nowrap;
+}
+
+.status-pending {
+	background-color: #fff4dc;
+	color: #a8791d;
+}
+
+.status-approved {
+	background-color: #e7f5eb;
+	color: #34804c;
+}
+
+.status-rejected {
+	background-color: #fdebea;
+	color: #bf4b46;
+}
+
+/* Botón detalle */
+.btn-detail {
+	background-color: #fff0e9;
+	color: var(--lp-primary-dark);
+	border: 1px solid #f5d8ca;
+	border-radius: 10px;
+	padding: 9px 12px;
+	font-size: 0.82rem;
+	font-weight: 800;
+	text-decoration: none;
+	transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-detail:hover {
+	background-color: var(--lp-primary);
+	border-color: var(--lp-primary);
+	color: #fff;
+}
+
+/* Estado vacío */
+.empty-state {
+	background-color: #fff;
+	border: 1px dashed #e4d9e1;
+	border-radius: 20px;
+	padding: 60px 25px;
+	text-align: center;
+}
+
+.empty-icon {
+	font-size: 3.5rem;
+	margin-bottom: 20px;
+}
+
+.empty-state h3 {
+	font-weight: 800;
+}
+
+.empty-state p {
+	color: var(--lp-muted);
+	max-width: 500px;
+	margin: 12px auto;
+	line-height: 1.7;
+}
+
+/* Footer */
+.footer {
+	background-color: #fff;
+	border-top: 1px solid #eee9e5;
+	color: var(--lp-muted);
+}
+
+.footer-brand {
+	color: var(--lp-primary);
+	font-size: 1.4rem;
+	font-weight: 800;
+}
+
+/* Responsive */
+@media ( max-width : 767px) {
+	.filter-section, .summary-card {
+		padding: 20px;
+	}
+	.request-card {
+		padding: 21px;
+	}
+}
+
+@media ( max-width : 575px) {
+	.request-card {
+		padding: 19px;
+	}
+}

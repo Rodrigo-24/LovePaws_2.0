@@ -11,9 +11,29 @@ public class EventoAdopcionDTO {
 	private String detalle;
 	private String nombreActor;
 	private LocalDateTime fechaEvento;
+	private Long idSolicitud;
+	private String nombreMascota;
+	private String nombresAdoptante;
+	private String apellidosAdoptante;
 
-	public EventoAdopcionDTO(Long idEvento, TipoEventoAdopcion tipoEvento, String detalle, String nombreActor, LocalDateTime fechaEvento) {
+	public EventoAdopcionDTO(Long idEvento, TipoEventoAdopcion tipoEvento, String detalle, String nombreActor,
+			LocalDateTime fechaEvento) {
 		this.idEvento = idEvento;
+		this.tipoEvento = tipoEvento;
+		this.detalle = detalle;
+		this.nombreActor = nombreActor;
+		this.fechaEvento = fechaEvento;
+	}
+
+	public EventoAdopcionDTO(Long idEvento, Long idSolicitud, String nombreMascota, String nombresAdoptante,
+			String apellidosAdoptante, TipoEventoAdopcion tipoEvento, String detalle, String nombreActor,
+			LocalDateTime fechaEvento) {
+
+		this.idEvento = idEvento;
+		this.idSolicitud = idSolicitud;
+		this.nombreMascota = nombreMascota;
+		this.nombresAdoptante = nombresAdoptante;
+		this.apellidosAdoptante = apellidosAdoptante;
 		this.tipoEvento = tipoEvento;
 		this.detalle = detalle;
 		this.nombreActor = nombreActor;
@@ -38,5 +58,21 @@ public class EventoAdopcionDTO {
 
 	public LocalDateTime getFechaEvento() {
 		return fechaEvento;
+	}
+
+	public Long getIdSolicitud() {
+		return idSolicitud;
+	}
+
+	public String getNombreMascota() {
+		return nombreMascota;
+	}
+
+	public String getNombresAdoptante() {
+		return nombresAdoptante;
+	}
+
+	public String getApellidosAdoptante() {
+		return apellidosAdoptante;
 	}
 }

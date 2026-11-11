@@ -13,6 +13,7 @@ import com.lovePaws.solicitud.dto.PreguntaSolicitudDTO;
 import com.lovePaws.solicitud.dto.ResolverSolicitudDTO;
 import com.lovePaws.solicitud.dto.RespuestaSolicitudDTO;
 import com.lovePaws.solicitud.dto.RespuestaSolicitudDetalleDTO;
+import com.lovePaws.solicitud.dto.SolicitudAdopcionAdminDTO;
 import com.lovePaws.solicitud.dto.SolicitudAdopcionDetalleDTO;
 import com.lovePaws.solicitud.dto.SolicitudAdopcionGestorDTO;
 import com.lovePaws.solicitud.dto.SolicitudAdopcionRespuestaDTO;
@@ -45,6 +46,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Sort;
 
 @Service
 public class SolicitudAdopcionService {
@@ -431,6 +433,29 @@ public class SolicitudAdopcionService {
 	}
 
 	@Transactional(readOnly = true)
+	public SolicitudAdopcionDetalleDTO obtenerDetalleSolicitudAdmin(Long idSolicitud) {
+
+		// 1. Buscar la solicitud
+		SolicitudAdopcion solicitud = solicitudRepository.findById(idSolicitud).orElseThrow(
+				() -> new RecursoNoEncontradoException("No se encontró la solicitud con ID: " + idSolicitud));
+
+		// 2. Obtener las respuestas del adoptante
+		List<RespuestaSolicitudDetalleDTO> respuestas = respuestaSolicitudRepository
+				.findBySolicitud_IdSolicitudOrderByOrdenPreguntaAsc(idSolicitud).stream()
+				.map(respuesta -> new RespuestaSolicitudDetalleDTO(respuesta.getPreguntaTextoSnapshot(),
+						respuesta.getRespuesta(), respuesta.getOrdenPregunta()))
+				.toList();
+
+		// 3. Construir el detalle administrativo
+		return new SolicitudAdopcionDetalleDTO(solicitud.getIdSolicitud(), solicitud.getMascota().getIdMascota(),
+				solicitud.getMascota().getNombre(), solicitud.getMascota().getTipoMascota().getNombre(),
+				solicitud.getMascota().getFotoUrl(), solicitud.getAdoptante().getNombres(),
+				solicitud.getAdoptante().getApellidos(), solicitud.getAdoptante().getEmail(),
+				solicitud.getFechaSolicitud(), solicitud.getEstado(), solicitud.getFechaResolucion(),
+				obtenerNombreResponsable(solicitud), solicitud.getObservacionResolucion(), respuestas);
+	}
+
+	@Transactional(readOnly = true)
 	public List<EventoAdopcionDTO> obtenerHistorialAdoptante(Long idSolicitud, String username) {
 
 		// 1. Buscar al adoptante autenticado
@@ -473,6 +498,21 @@ public class SolicitudAdopcionService {
 	}
 
 	@Transactional(readOnly = true)
+	public List<EventoAdopcionDTO> obtenerHistorialAdmin(Long idSolicitud) {
+
+		// 1. Verificar que exista la solicitud
+		if (!solicitudRepository.existsById(idSolicitud)) {
+			throw new RecursoNoEncontradoException("No se encontró la solicitud con ID: " + idSolicitud);
+		}
+
+		// 2. Obtener los eventos ordenados cronológicamente
+		List<EventoAdopcion> eventos = eventoRepository.findBySolicitud_IdSolicitudOrderByFechaEventoAsc(idSolicitud);
+
+		// 3. Convertir las entidades en DTO
+		return convertirEventos(eventos);
+	}
+
+	@Transactional(readOnly = true)
 	public Page<EventoAdopcionDTO> listarHistorialGeneral(Pageable pageable) {
 
 		// 1. Obtener los eventos paginados
@@ -508,6 +548,26 @@ public class SolicitudAdopcionService {
 				.map(pregunta -> new PreguntaSolicitudDTO(pregunta.getIdPregunta(), pregunta.getTexto(),
 						pregunta.getTipoRespuesta(), pregunta.getOpciones(), pregunta.getOrden(),
 						pregunta.isObligatoria()))
+				.toList();
+	}
+
+	@Transactional(readOnly = true)
+	public List<SolicitudAdopcionAdminDTO> listarSolicitudesAdmin(EstadoSolicitud estado) {
+		List<SolicitudAdopcion> solicitudes;
+
+		// Consultar todas las solicitudes o filtrar por estado
+		if (estado == null) {
+			solicitudes = solicitudRepository.findAll(Sort.by(Sort.Direction.DESC, "fechaSolicitud"));
+		} else {
+			solicitudes = solicitudRepository.findByEstadoOrderByFechaSolicitudDesc(estado);
+		}
+
+		// Convertir las entidades en DTO
+		return solicitudes.stream()
+				.map(solicitud -> new SolicitudAdopcionAdminDTO(solicitud.getIdSolicitud(),
+						solicitud.getMascota().getIdMascota(), solicitud.getMascota().getNombre(),
+						solicitud.getMascota().getTipoMascota().getNombre(), solicitud.getAdoptante().getNombres(),
+						solicitud.getAdoptante().getApellidos(), solicitud.getFechaSolicitud(), solicitud.getEstado()))
 				.toList();
 	}
 
@@ -556,15 +616,21 @@ public class SolicitudAdopcionService {
 	private EventoAdopcionDTO convertirEvento(EventoAdopcion evento) {
 		Usuario actor = evento.getActor();
 		String nombreActor;
+
 		if (actor == null) {
 			nombreActor = "Usuario no disponible";
 		} else {
 			nombreActor = actor.getNombres();
+
 			if (actor.getApellidos() != null && !actor.getApellidos().isBlank()) {
 				nombreActor += " " + actor.getApellidos();
 			}
 		}
-		return new EventoAdopcionDTO(evento.getIdEvento(), evento.getTipoEvento(), evento.getDetalle(), nombreActor,
+		SolicitudAdopcion solicitud = evento.getSolicitud();
+		
+		return new EventoAdopcionDTO(evento.getIdEvento(), solicitud.getIdSolicitud(),
+				solicitud.getMascota().getNombre(), solicitud.getAdoptante().getNombres(),
+				solicitud.getAdoptante().getApellidos(), evento.getTipoEvento(), evento.getDetalle(), nombreActor,
 				evento.getFechaEvento());
 	}
 

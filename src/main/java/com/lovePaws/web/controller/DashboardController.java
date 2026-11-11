@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.lovePaws.dashboard.service.AdminDashboardService;
 import com.lovePaws.dashboard.service.GestorDashboardService;
@@ -46,7 +47,8 @@ public class DashboardController {
 	@GetMapping("/adoptante/catalogo")
 	public String catalogo(@RequestParam(required = false) String tipo, Model model) {
 		String tipoSeleccionado = (tipo == null || tipo.isBlank()) ? "TODOS" : tipo.trim().toUpperCase(Locale.ROOT);
-		model.addAttribute("mascotas", mascotaService.listarCatalogo(tipoSeleccionado.equals("TODOS") ? null : tipoSeleccionado));
+		model.addAttribute("mascotas",
+				mascotaService.listarCatalogo(tipoSeleccionado.equals("TODOS") ? null : tipoSeleccionado));
 		model.addAttribute("tipoSeleccionado", tipoSeleccionado);
 		return "adoptante/catalogo";
 	}
@@ -54,7 +56,8 @@ public class DashboardController {
 	@GetMapping("/adoptante/catalogo/resultados")
 	public String resultadosCatalogo(@RequestParam(required = false) String tipo, Model model) {
 		String tipoSeleccionado = (tipo == null || tipo.isBlank()) ? "TODOS" : tipo.trim().toUpperCase(Locale.ROOT);
-		model.addAttribute("mascotas", mascotaService.listarCatalogo(tipoSeleccionado.equals("TODOS") ? null : tipoSeleccionado));
+		model.addAttribute("mascotas",
+				mascotaService.listarCatalogo(tipoSeleccionado.equals("TODOS") ? null : tipoSeleccionado));
 		model.addAttribute("tipoSeleccionado", tipoSeleccionado);
 		return "adoptante/catalogo :: resultados";
 	}
@@ -69,5 +72,16 @@ public class DashboardController {
 		model.addAttribute("solicitudes",
 				solicitudAdopcionService.listarSolicitudesAdoptante(authentication.getName()));
 		return "adoptante/mis-adopciones";
+	}
+
+	// Mostrar los reportes y estadísticas administrativas
+	@GetMapping("/admin/reportes")
+	@PreAuthorize("hasRole('ADMIN')")
+	public String adminReportes(Model model) {
+		model.addAttribute("resumen", adminDashboardService.obtenerResumenReportes());
+		model.addAttribute("adopcionesPorMes", adminDashboardService.obtenerAdopcionesPorMes());
+		model.addAttribute("mascotasPorTipo", adminDashboardService.obtenerMascotasPorTipo());
+
+		return "admin/reportes";
 	}
 }

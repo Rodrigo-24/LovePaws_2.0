@@ -24,6 +24,11 @@ body {
 	letter-spacing: -1px;
 }
 
+.navbar .btn {
+	border-radius: 10px;
+	font-weight: 600;
+}
+
 .btn-logout {
 	border-radius: 10px;
 }

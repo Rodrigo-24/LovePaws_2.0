@@ -38,4 +38,7 @@ public interface SolicitudAdopcionRepository extends JpaRepository<SolicitudAdop
 	// Consultar las solicitudes pendientes de un adoptante
 	List<SolicitudAdopcion> findByAdoptante_IdUsuarioAndEstadoOrderByFechaSolicitudDesc(Long idAdoptante,
 			EstadoSolicitud estado);
+
+	// Consultar todas las solicitudes según su estado
+	List<SolicitudAdopcion> findByEstadoOrderByFechaSolicitudDesc(EstadoSolicitud estado);
 }

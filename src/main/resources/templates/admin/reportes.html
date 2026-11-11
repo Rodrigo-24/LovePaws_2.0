@@ -1,0 +1,398 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Reportes y estadísticas | LovePaws</title>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<link rel="stylesheet" th:href="@{/css/admin-reportes.css}">
+</head>
+
+<body>
+
+	<!-- Navegación -->
+	<nav class="navbar sticky-top border-bottom shadow-sm">
+
+		<div class="container py-2">
+
+			<a class="navbar-brand brand-name" th:href="@{/admin/dashboard}">
+				🐾 LovePaws </a>
+
+			<div class="d-flex align-items-center gap-2 flex-wrap">
+
+				<a th:href="@{/admin/dashboard}"
+					class="btn btn-outline-secondary btn-sm"> Dashboard </a> <a
+					th:href="@{/admin/solicitudes}"
+					class="btn btn-outline-secondary btn-sm"> Solicitudes </a> <a
+					th:href="@{/admin/historial}"
+					class="btn btn-outline-secondary btn-sm"> Historial </a>
+
+				<form th:action="@{/logout}" method="post">
+					<button type="submit" class="btn btn-outline-danger btn-sm">
+						Cerrar sesión</button>
+				</form>
+
+			</div>
+
+		</div>
+
+	</nav>
+
+
+	<main class="container py-5">
+
+		<!-- Encabezado -->
+		<section class="page-header mb-5">
+
+			<a th:href="@{/admin/dashboard}" class="back-link"> ← Volver al
+				dashboard </a> <span class="section-label d-block mt-4"> PANEL
+				ADMINISTRATIVO </span>
+
+			<h1 class="page-title mt-2">Reportes y estadísticas</h1>
+
+			<p class="page-description">Consulta el estado general de las
+				solicitudes de adopción, la disponibilidad de las mascotas y la
+				evolución de las adopciones en LovePaws.</p>
+
+		</section>
+
+
+		<!-- Indicadores de solicitudes -->
+		<section class="report-section mb-5">
+
+			<div class="section-heading mb-4">
+				<span class="section-label">SOLICITUDES</span>
+				<h2>Resumen de solicitudes</h2>
+				<p>Indicadores generales de las solicitudes registradas.</p>
+			</div>
+
+			<div class="row g-3">
+
+				<div class="col-6 col-lg-3">
+					<article class="metric-card metric-total h-100">
+						<span class="metric-icon">📋</span> <span class="metric-label">Total
+							de solicitudes</span> <strong class="metric-value"
+							th:text="${resumen.totalSolicitudes}">0</strong>
+					</article>
+				</div>
+
+				<div class="col-6 col-lg-3">
+					<article class="metric-card metric-pending h-100">
+						<span class="metric-icon">⏳</span> <span class="metric-label">Pendientes</span>
+						<strong class="metric-value"
+							th:text="${resumen.solicitudesPendientes}">0</strong>
+					</article>
+				</div>
+
+				<div class="col-6 col-lg-3">
+					<article class="metric-card metric-approved h-100">
+						<span class="metric-icon">✅</span> <span class="metric-label">Aprobadas</span>
+						<strong class="metric-value"
+							th:text="${resumen.solicitudesAprobadas}">0</strong>
+					</article>
+				</div>
+
+				<div class="col-6 col-lg-3">
+					<article class="metric-card metric-rejected h-100">
+						<span class="metric-icon">❌</span> <span class="metric-label">Rechazadas</span>
+						<strong class="metric-value"
+							th:text="${resumen.solicitudesRechazadas}">0</strong>
+					</article>
+				</div>
+
+			</div>
+
+		</section>
+
+
+		<!-- Indicadores de mascotas -->
+		<section class="report-section mb-5">
+
+			<div class="section-heading mb-4">
+				<span class="section-label">MASCOTAS</span>
+				<h2>Estado de las mascotas</h2>
+				<p>Distribución según su disponibilidad y estado de publicación.</p>
+			</div>
+
+			<div class="row g-3">
+
+				<div class="col-6 col-lg-4">
+					<article class="metric-card metric-available h-100">
+						<span class="metric-icon">🐾</span> <span class="metric-label">Disponibles</span>
+						<strong class="metric-value"
+							th:text="${resumen.mascotasDisponibles}">0</strong>
+					</article>
+				</div>
+
+				<div class="col-6 col-lg-4">
+					<article class="metric-card metric-adopted h-100">
+						<span class="metric-icon">🏡</span> <span class="metric-label">Adoptadas</span>
+						<strong class="metric-value"
+							th:text="${resumen.mascotasAdoptadas}">0</strong>
+					</article>
+				</div>
+
+				<div class="col-12 col-lg-4">
+					<article class="metric-card metric-blocked h-100">
+						<span class="metric-icon">🔒</span> <span class="metric-label">Bloqueadas</span>
+						<strong class="metric-value"
+							th:text="${resumen.mascotasBloqueadas}">0</strong>
+					</article>
+				</div>
+
+			</div>
+
+		</section>
+
+
+		<!-- Tasa de aprobación -->
+		<section class="approval-section mb-5">
+
+			<div class="approval-icon">📈</div>
+
+			<div class="approval-information">
+
+				<span class="section-label">INDICADOR DE EFECTIVIDAD</span>
+
+				<h2>Tasa de aprobación</h2>
+
+				<p>Porcentaje de solicitudes aprobadas respecto al total de
+					solicitudes que ya fueron resueltas.</p>
+
+			</div>
+
+			<div class="approval-value">
+
+				<strong
+					th:text="${#numbers.formatDecimal(
+                                    resumen.tasaAprobacion, 1, 1) + '%'}">
+					0.0% </strong> <span> De solicitudes resueltas </span>
+
+			</div>
+
+		</section>
+
+
+		<!-- Gráficos -->
+		<section class="report-section mb-5">
+
+			<div class="section-heading mb-4">
+				<span class="section-label">ANÁLISIS VISUAL</span>
+				<h2>Comportamiento de la plataforma</h2>
+				<p>Visualiza la evolución de las adopciones y la distribución de
+					mascotas.</p>
+			</div>
+
+			<div class="row g-4">
+
+				<!-- Evolución mensual -->
+				<div class="col-lg-7">
+
+					<article class="chart-card h-100">
+
+						<div class="chart-heading">
+							<div>
+								<h3>Adopciones por mes</h3>
+								<p>Solicitudes aprobadas durante los últimos 12 meses.</p>
+							</div>
+						</div>
+
+						<div class="chart-container">
+							<canvas id="adopcionesChart"></canvas>
+						</div>
+
+					</article>
+
+				</div>
+
+
+				<!-- Distribución por tipo -->
+				<div class="col-lg-5">
+
+					<article class="chart-card h-100">
+
+						<div class="chart-heading">
+							<div>
+								<h3>Mascotas por tipo</h3>
+								<p>Cantidad de mascotas registradas según su tipo.</p>
+							</div>
+						</div>
+
+						<div class="chart-container chart-doughnut">
+							<canvas id="mascotasChart"></canvas>
+						</div>
+
+					</article>
+
+				</div>
+
+			</div>
+
+		</section>
+
+
+		<!-- Nota informativa -->
+		<section class="report-note">
+
+			<span class="note-icon">ℹ️</span>
+
+			<p>Los indicadores y gráficos se generan a partir de los
+				registros almacenados en la base de datos. La tasa de aprobación
+				considera únicamente las solicitudes resueltas.</p>
+
+		</section>
+
+	</main>
+
+
+	<!-- Footer -->
+	<footer class="footer py-4 mt-5">
+
+		<div class="container text-center">
+
+			<p class="footer-brand mb-1">🐾 LovePaws</p>
+
+			<small> Cada mascota merece un hogar lleno de amor. </small>
+
+		</div>
+
+	</footer>
+
+
+	<!-- Chart.js -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+
+	<!-- Datos de los gráficos -->
+	<script th:inline="javascript">
+
+        const adopcionesPorMes = /*[[${adopcionesPorMes}]]*/ [];
+        const mascotasPorTipo = /*[[${mascotasPorTipo}]]*/ [];
+
+        // Gráfico de adopciones por mes
+        const contextoAdopciones =
+            document.getElementById('adopcionesChart');
+
+        new Chart(contextoAdopciones, {
+            type: 'bar',
+
+            data: {
+                labels: adopcionesPorMes.map(dato => dato.etiqueta),
+
+                datasets: [{
+                    label: 'Adopciones aprobadas',
+                    data: adopcionesPorMes.map(dato => dato.cantidad),
+                    backgroundColor: '#e97955',
+                    borderColor: '#d85f3c',
+                    borderWidth: 1,
+                    borderRadius: 7,
+                    maxBarThickness: 38
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+
+                    tooltip: {
+                        callbacks: {
+                            label: contexto =>
+                                ` ${contexto.parsed.y} adopciones`
+                        }
+                    }
+                },
+
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        },
+                        grid: {
+                            color: '#f0e9e4'
+                        }
+                    },
+
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+
+        // Gráfico de mascotas por tipo
+        const contextoMascotas =
+            document.getElementById('mascotasChart');
+
+        new Chart(contextoMascotas, {
+            type: 'doughnut',
+
+            data: {
+                labels: mascotasPorTipo.map(dato => dato.etiqueta),
+
+                datasets: [{
+                    data: mascotasPorTipo.map(dato => dato.cantidad),
+
+                    backgroundColor: [
+                        '#e97955',
+                        '#78a98a',
+                        '#e8bd64',
+                        '#8d86bb',
+                        '#78aabd',
+                        '#c58ba9'
+                    ],
+
+                    borderColor: '#ffffff',
+                    borderWidth: 3,
+                    hoverOffset: 7
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+
+                        labels: {
+                            usePointStyle: true,
+                            padding: 18
+                        }
+                    },
+
+                    tooltip: {
+                        callbacks: {
+                            label: contexto =>
+                                ` ${contexto.label}: ${contexto.parsed} mascotas`
+                        }
+                    }
+                },
+
+                cutout: '62%'
+            }
+        });
+
+    </script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

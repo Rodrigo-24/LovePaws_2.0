@@ -1,0 +1,435 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Detalle de solicitud | LovePaws</title>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<link rel="stylesheet" th:href="@{/css/admin-detalle-solicitud.css}">
+</head>
+
+<body>
+
+	<!-- Navegación -->
+	<nav class="navbar navbar-expand-lg sticky-top border-bottom shadow-sm">
+		<div class="container py-2">
+
+			<a class="navbar-brand brand-name" th:href="@{/admin/dashboard}">
+				🐾 LovePaws </a>
+
+			<div
+				class="d-flex flex-column flex-lg-row align-items-lg-center gap-2">
+
+				<a class="btn btn-outline-secondary btn-sm"
+					th:href="@{/admin/dashboard}"> Dashboard </a> <a
+					class="btn btn-outline-secondary btn-sm"
+					th:href="@{/admin/solicitudes}"> Solicitudes </a>
+
+				<form th:action="@{/logout}" method="post">
+					<button type="submit" class="btn btn-outline-danger btn-sm">
+						Cerrar sesión</button>
+				</form>
+
+			</div>
+		</div>
+	</nav>
+
+
+	<main class="container py-5">
+
+		<!-- Encabezado -->
+		<section class="page-header mb-4">
+
+			<a th:href="@{/admin/solicitudes}" class="back-link"> ← Volver a
+				solicitudes </a> <span class="section-label d-block mt-4">
+				ADMINISTRACIÓN DE SOLICITUDES </span>
+
+			<div
+				class="d-flex flex-column flex-md-row
+                        justify-content-between align-items-md-center gap-3 mt-2">
+
+				<div>
+					<h1 class="page-title"
+						th:text="${'Solicitud #' + solicitud.idSolicitud}">Solicitud
+						#1</h1>
+
+					<p class="page-description mb-0">Consulta la información, las
+						respuestas y el historial de esta solicitud de adopción.</p>
+				</div>
+
+				<!-- Estado -->
+				<div>
+					<span th:if="${solicitud.estado.name() == 'PENDIENTE'}"
+						class="status-badge status-pending"> Pendiente </span> <span
+						th:if="${solicitud.estado.name() == 'APROBADA'}"
+						class="status-badge status-approved"> Aprobada </span> <span
+						th:if="${solicitud.estado.name() == 'RECHAZADA'}"
+						class="status-badge status-rejected"> Rechazada </span>
+				</div>
+
+			</div>
+		</section>
+
+
+		<!-- Información general -->
+		<section class="row g-4 mb-5">
+
+			<!-- Mascota -->
+			<div class="col-lg-6">
+				<article class="information-card h-100">
+
+					<div class="card-heading">
+						<span class="heading-icon">🐾</span>
+
+						<div>
+							<h2>Mascota solicitada</h2>
+							<p>Información de la mascota relacionada.</p>
+						</div>
+					</div>
+
+					<div class="pet-information">
+
+						<div class="pet-image-container">
+
+							<img
+								th:if="${solicitud.fotoMascotaUrl != null
+                                         and !#strings.isEmpty(solicitud.fotoMascotaUrl)}"
+								th:src="${solicitud.fotoMascotaUrl}"
+								th:alt="${'Fotografía de ' + solicitud.nombreMascota}"
+								class="pet-photo">
+
+							<div
+								th:unless="${solicitud.fotoMascotaUrl != null
+                                             and !#strings.isEmpty(solicitud.fotoMascotaUrl)}"
+								class="pet-photo-placeholder">
+								<span>🐾</span> <small>Sin fotografía</small>
+							</div>
+
+						</div>
+
+						<div>
+							<span class="pet-type" th:text="${solicitud.tipoMascota}">
+								GATO </span>
+
+							<h3 class="pet-name mt-2" th:text="${solicitud.nombreMascota}">
+								Mauro</h3>
+
+							<small class="text-muted"
+								th:text="${'ID de mascota: ' + solicitud.idMascota}"> ID
+								de mascota: 1 </small>
+						</div>
+
+					</div>
+
+				</article>
+			</div>
+
+
+			<!-- Adoptante -->
+			<div class="col-lg-6">
+				<article class="information-card h-100">
+
+					<div class="card-heading">
+						<span class="heading-icon">👤</span>
+
+						<div>
+							<h2>Datos del adoptante</h2>
+							<p>Información del usuario que realizó la solicitud.</p>
+						</div>
+					</div>
+
+					<div class="adopter-information">
+
+						<div class="information-item">
+							<span class="information-label">Nombre completo</span> <strong
+								th:text="${solicitud.nombresAdoptante + ' '
+                                              + solicitud.apellidosAdoptante}">
+								Nombre del adoptante </strong>
+						</div>
+
+						<div class="information-item">
+							<span class="information-label">Correo electrónico</span> <strong
+								th:text="${solicitud.correoAdoptante}">
+								correo@ejemplo.com </strong>
+						</div>
+
+					</div>
+
+				</article>
+			</div>
+
+		</section>
+
+
+		<!-- Fechas -->
+		<section class="content-section mb-5">
+
+			<div class="section-heading mb-4">
+
+				<span class="section-label">SEGUIMIENTO</span>
+
+				<h2 class="mt-2">Fechas importantes</h2>
+
+				<p>Fechas relacionadas con el registro y la resolución.</p>
+
+			</div>
+
+			<div class="row g-3">
+
+				<div class="col-md-6">
+					<article class="date-card h-100">
+
+						<span class="information-label">Fecha de solicitud</span> <strong
+							th:text="${#temporals.format(
+                                            solicitud.fechaSolicitud,
+                                            'dd/MM/yyyy - HH:mm')}">
+							09/11/2026 - 10:30 </strong>
+
+					</article>
+				</div>
+
+				<div class="col-md-6">
+					<article class="date-card h-100">
+
+						<span class="information-label">Fecha de resolución</span> <strong
+							th:if="${solicitud.fechaResolucion != null}"
+							th:text="${#temporals.format(
+                                            solicitud.fechaResolucion,
+                                            'dd/MM/yyyy - HH:mm')}">
+							09/11/2026 - 12:30 </strong> <strong
+							th:unless="${solicitud.fechaResolucion != null}"
+							class="text-muted"> Pendiente de resolución </strong>
+
+					</article>
+				</div>
+
+			</div>
+
+		</section>
+
+
+		<!-- Respuestas -->
+		<section class="content-section mb-5">
+
+			<div class="section-heading mb-4">
+
+				<span class="section-label">FORMULARIO DE ADOPCIÓN</span>
+
+				<h2 class="mt-2">Respuestas del adoptante</h2>
+
+				<p>Respuestas registradas al momento de enviar la solicitud.</p>
+
+			</div>
+
+			<div th:if="${#lists.isEmpty(solicitud.respuestas)}"
+				class="empty-state">
+
+				<span class="empty-icon">📝</span>
+
+				<h3>Sin respuestas registradas</h3>
+
+				<p>Esta solicitud no contiene respuestas disponibles.</p>
+
+			</div>
+
+			<div th:unless="${#lists.isEmpty(solicitud.respuestas)}"
+				class="d-flex flex-column gap-3">
+
+				<article class="answer-card"
+					th:each="respuesta, iterStat : ${solicitud.respuestas}">
+
+					<span class="answer-number"
+						th:text="${'Pregunta ' + iterStat.count}"> Pregunta 1 </span>
+
+					<h3 th:text="${respuesta.pregunta}">¿Por qué deseas adoptar
+						esta mascota?</h3>
+
+					<div class="answer-content">
+
+						<span class="information-label">Respuesta registrada</span>
+
+						<p th:text="${respuesta.respuesta}">Respuesta del adoptante.</p>
+
+					</div>
+
+				</article>
+
+			</div>
+
+		</section>
+
+
+		<!-- Resolución -->
+		<section class="content-section mb-5">
+
+			<div class="section-heading mb-4">
+
+				<span class="section-label">RESULTADO DE LA EVALUACIÓN</span>
+
+				<h2 class="mt-2">Resolución del responsable</h2>
+
+				<p>Información de la decisión tomada por el gestor responsable.</p>
+
+			</div>
+
+			<!-- Pendiente -->
+			<article th:if="${solicitud.estado.name() == 'PENDIENTE'}"
+				class="evaluation-card evaluation-pending">
+
+				<div class="evaluation-icon">⏳</div>
+
+				<div>
+					<h3>Solicitud pendiente de evaluación</h3>
+
+					<p>El gestor responsable todavía no ha emitido una respuesta
+						para esta solicitud.</p>
+				</div>
+
+			</article>
+
+
+			<!-- Resuelta -->
+			<article th:unless="${solicitud.estado.name() == 'PENDIENTE'}"
+				class="evaluation-card">
+
+				<div class="evaluation-icon"
+					th:text="${solicitud.estado.name() == 'APROBADA' ? '✅' : '📩'}">
+					📩</div>
+
+				<div class="evaluation-details">
+
+					<h3
+						th:text="${solicitud.estado.name() == 'APROBADA'
+                                  ? 'Solicitud aprobada'
+                                  : 'Solicitud rechazada'}">
+						Resultado de la solicitud</h3>
+
+					<p class="responsible-name"
+						th:if="${solicitud.nombreResponsable != null}">
+						Resuelto por: <strong th:text="${solicitud.nombreResponsable}">
+							Nombre del responsable </strong>
+					</p>
+
+					<div class="observation-content">
+
+						<span class="information-label"> Observación del
+							responsable </span>
+
+						<p
+							th:if="${solicitud.observacionResolucion != null
+                                   and !#strings.isEmpty(solicitud.observacionResolucion)}"
+							th:text="${solicitud.observacionResolucion}">Observación
+							registrada.</p>
+
+						<p
+							th:unless="${solicitud.observacionResolucion != null
+                                       and !#strings.isEmpty(solicitud.observacionResolucion)}"
+							class="text-muted mb-0">No se agregó una observación
+							adicional.</p>
+
+					</div>
+
+				</div>
+
+			</article>
+
+		</section>
+
+
+		<!-- Historial de eventos -->
+		<section class="content-section">
+
+			<div class="section-heading mb-4">
+
+				<span class="section-label">TRAZABILIDAD</span>
+
+				<h2 class="mt-2">Historial de actividad</h2>
+
+				<p>Registro cronológico de los eventos relacionados con la
+					solicitud.</p>
+
+			</div>
+
+			<div th:if="${#lists.isEmpty(historial)}" class="empty-state">
+
+				<span class="empty-icon">📋</span>
+
+				<h3>Sin eventos registrados</h3>
+
+				<p>No hay actividad disponible para esta solicitud.</p>
+
+			</div>
+
+			<div th:unless="${#lists.isEmpty(historial)}" class="timeline">
+
+				<article class="timeline-item" th:each="evento : ${historial}">
+
+					<div class="timeline-marker"></div>
+
+					<div class="timeline-card">
+
+						<div class="timeline-header">
+
+							<h3
+								th:text="${#strings.replace(
+                                            evento.tipoEvento.name(),
+                                            '_', ' ')}">
+								SOLICITUD CREADA</h3>
+
+							<span class="timeline-date"
+								th:text="${#temporals.format(
+                                              evento.fechaEvento,
+                                              'dd/MM/yyyy - HH:mm')}">
+								09/11/2026 - 10:30 </span>
+
+						</div>
+
+						<p class="timeline-detail" th:text="${evento.detalle}">
+							Detalle del evento.</p>
+
+						<small class="timeline-actor"> Responsable: <strong
+							th:text="${evento.nombreActor}"> Nombre del usuario </strong>
+						</small>
+
+					</div>
+
+				</article>
+
+			</div>
+
+		</section>
+
+
+		<!-- Acción inferior -->
+		<div class="bottom-actions mt-5">
+
+			<a th:href="@{/admin/solicitudes}" class="btn btn-love"> Volver a
+				solicitudes </a>
+
+		</div>
+
+	</main>
+
+
+	<!-- Footer -->
+	<footer class="footer py-4 mt-5">
+
+		<div class="container text-center">
+			<p class="footer-brand mb-1">🐾 LovePaws</p>
+			<small>Cada mascota merece un hogar lleno de amor.</small>
+		</div>
+
+	</footer>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

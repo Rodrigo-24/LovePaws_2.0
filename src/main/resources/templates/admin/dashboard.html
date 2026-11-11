@@ -60,10 +60,17 @@
 						supervisar la actividad general de la plataforma, consultar los
 						registros y administrar las cuentas de los usuarios.</p>
 
-					<a th:href="@{/admin/usuarios}" class="btn btn-primary-action">
-						<span class="me-2">👥</span> Administrar usuarios <span
-						class="ms-2">→</span>
-					</a>
+					<div class="welcome-actions">
+
+						<a th:href="@{/admin/usuarios}" class="btn btn-primary-action">
+							<span class="me-2">👥</span> Administrar usuarios <span
+							class="ms-2">→</span>
+						</a> <a th:href="@{/admin/historial}" class="btn-history-action">
+							<span class="me-2">📋</span> Historial de adopciones <span
+							class="ms-2">→</span>
+						</a>
+
+					</div>
 
 				</div>
 
@@ -120,9 +127,9 @@
 
 				<!-- Mascotas registradas -->
 				<div class="col-md-4">
-				
+
 					<a th:href="@{/admin/mascotas}" class="stat-card-link">
-					
+
 						<article class="stat-card h-100">
 
 							<div class="stat-icon stat-icon-green">🐾</div>
@@ -132,9 +139,8 @@
 							<p class="stat-number" th:text="${resumen.totalMascotas}">0</p>
 
 							<span class="stat-description"> Total de mascotas
-								registradas en la plataforma. </span> 
-								
-							<span class="stat-action"> Gestionar mascotas → </span>
+								registradas en la plataforma. </span> <span class="stat-action">
+								Gestionar mascotas → </span>
 
 						</article>
 					</a>
@@ -143,45 +149,48 @@
 				<!-- Solicitudes pendientes -->
 				<div class="col-md-4">
 
-					<article class="stat-card h-100">
+					<a th:href="@{/admin/solicitudes}" class="stat-card-link">
 
-						<div class="stat-icon stat-icon-yellow">📋</div>
+						<article class="stat-card h-100">
 
-						<h3>Solicitudes pendientes</h3>
+							<div class="stat-icon stat-icon-yellow">📋</div>
 
-						<p class="stat-number" th:text="${resumen.solicitudesPendientes}">
-							0</p>
+							<h3>Solicitudes pendientes</h3>
 
-						<span class="stat-description"> Solicitudes que todavía
-							esperan una resolución. </span>
-							
-						<span class="stat-action"> Gestionar solicitudes → </span>
+							<p class="stat-number" th:text="${resumen.solicitudesPendientes}">
+								0</p>
 
-					</article>
+							<span class="stat-description"> Solicitudes que todavía
+								esperan una resolución. </span> <span class="stat-action">
+								Gestionar solicitudes → </span>
 
+						</article>
+					</a>
 				</div>
 
 			</div>
 
 		</section>
 
-		<!-- Próximamente -->
-		<section class="upcoming-section">
+		<!-- Reportes y estadísticas -->
+		<a th:href="@{/admin/reportes}" class="upcoming-section upcoming-link">
 
 			<div class="upcoming-icon">📊</div>
 
 			<div class="upcoming-content">
 
-				<span class="upcoming-label"> PRÓXIMAMENTE </span>
+				<span class="upcoming-label"> REPORTES DISPONIBLES </span>
 
 				<h3>Reportes y estadísticas</h3>
 
-				<p>Aquí podrás consultar el historial de adopciones, tendencias
-					y estadísticas detalladas de la plataforma.</p>
+				<p>Consulta indicadores de adopción, estadísticas de mascotas y
+					la evolución de las solicitudes de LovePaws.</p>
+
+				<span class="upcoming-action"> Consultar reportes → </span>
 
 			</div>
 
-		</section>
+		</a>
 
 	</main>
 

@@ -26,6 +26,11 @@ body {
 	font-weight: 800;
 }
 
+.navbar .btn {
+	border-radius: 10px;
+	font-weight: 600;
+}
+
 /* Encabezado */
 .section-label {
 	color: var(--lp-primary-dark);
