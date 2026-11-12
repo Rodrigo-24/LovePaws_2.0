@@ -120,8 +120,8 @@ public class MascotaService {
 
 	private MascotaRespuestaDTO convertirARespuesta(Mascota mascota) {
 		Usuario gestor = mascota.getRegistradoPor();
-	    String nombreGestor = gestor.getNombres() + " " + gestor.getApellidos();
-	    
+		String nombreGestor = gestor.getNombres() + " " + gestor.getApellidos();
+
 		return new MascotaRespuestaDTO(mascota.getIdMascota(), mascota.getNombre(),
 				mascota.getTipoMascota().getNombre(), mascota.getRaza() != null ? mascota.getRaza().getNombre() : null,
 				mascota.getEdadAnios(), mascota.getEdadMeses(), mascota.getSexo(), mascota.getDescripcion(),
@@ -291,6 +291,24 @@ public class MascotaService {
 		return mascotas.stream().map(this::convertirARespuesta).toList();
 	}
 
+	@Transactional(readOnly = true)
+	public MascotaRespuestaDTO buscarMascotaDisponible(Long idMascota) {
+
+		// 1. Buscar la mascota
+		Mascota mascota = mascotaRepository.findById(idMascota)
+				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró la mascota solicitada."));
+
+		// 2. Verificar que esté publicada y disponible
+		if (mascota.getEstadoPublicacion() != EstadoPublicacion.ACTIVA
+				|| mascota.getEstadoAdopcion() != EstadoAdopcion.DISPONIBLE
+				|| mascota.getRegistradoPor().getEstado() != EstadoUsuario.ACTIVO) {
+			throw new DatoInvalidoException("Esta mascota ya no está disponible para adopción.");
+		}
+
+		// 3. Convertir a DTO
+		return convertirARespuesta(mascota);
+	}
+
 	private Raza resolverRaza(TipoMascota tipo, Long idRaza, String nombreRaza) {
 
 		// Caso 1. El formulario web envía el nombre de la raza
@@ -396,20 +414,4 @@ public class MascotaService {
 		return convertirARespuesta(mascotaActualizada);
 	}
 
-	@Transactional(readOnly = true)
-	public MascotaRespuestaDTO buscarMascotaDisponible(Long idMascota) {
-
-		// 1. Buscar la mascota
-		Mascota mascota = mascotaRepository.findById(idMascota)
-				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró la mascota solicitada."));
-
-		// 2. Verificar que esté publicada y disponible
-		if (mascota.getEstadoPublicacion() != EstadoPublicacion.ACTIVA
-				|| mascota.getEstadoAdopcion() != EstadoAdopcion.DISPONIBLE) {
-			throw new DatoInvalidoException("Esta mascota ya no está disponible para adopción.");
-		}
-
-		// 3. Convertir a DTO
-		return convertirARespuesta(mascota);
-	}
 }

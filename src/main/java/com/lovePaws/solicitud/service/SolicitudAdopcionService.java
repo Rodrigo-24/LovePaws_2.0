@@ -456,48 +456,6 @@ public class SolicitudAdopcionService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<EventoAdopcionDTO> obtenerHistorialAdoptante(Long idSolicitud, String username) {
-
-		// 1. Buscar al adoptante autenticado
-		Usuario adoptante = usuarioRepository.findByUsername(username)
-				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el usuario: " + username));
-
-		// 2. Buscar la solicitud
-		SolicitudAdopcion solicitud = solicitudRepository.findById(idSolicitud).orElseThrow(
-				() -> new RecursoNoEncontradoException("No se encontró la solicitud con ID: " + idSolicitud));
-
-		// 3. Verificar que pertenezca al adoptante
-		if (!solicitud.getAdoptante().getIdUsuario().equals(adoptante.getIdUsuario())) {
-			throw new RecursoNoEncontradoException("No se encontró la solicitud con ID: " + idSolicitud);
-		}
-
-		// 4. Obtener el historial
-		List<EventoAdopcion> eventos = eventoRepository.findBySolicitud_IdSolicitudOrderByFechaEventoAsc(idSolicitud);
-		return convertirEventos(eventos);
-	}
-
-	@Transactional(readOnly = true)
-	public List<EventoAdopcionDTO> obtenerHistorialGestor(Long idSolicitud, String username) {
-
-		// 1. Buscar al gestor autenticado
-		Usuario gestor = usuarioRepository.findByUsername(username)
-				.orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el usuario: " + username));
-
-		// 2. Buscar la solicitud
-		SolicitudAdopcion solicitud = solicitudRepository.findById(idSolicitud).orElseThrow(
-				() -> new RecursoNoEncontradoException("No se encontró la solicitud con ID: " + idSolicitud));
-
-		// 3. Verificar que la mascota pertenezca al gestor
-		if (!solicitud.getMascota().getRegistradoPor().getIdUsuario().equals(gestor.getIdUsuario())) {
-			throw new RecursoNoEncontradoException("No se encontró la solicitud con ID: " + idSolicitud);
-		}
-
-		// 4. Obtener el historial
-		List<EventoAdopcion> eventos = eventoRepository.findBySolicitud_IdSolicitudOrderByFechaEventoAsc(idSolicitud);
-		return convertirEventos(eventos);
-	}
-
-	@Transactional(readOnly = true)
 	public List<EventoAdopcionDTO> obtenerHistorialAdmin(Long idSolicitud) {
 
 		// 1. Verificar que exista la solicitud

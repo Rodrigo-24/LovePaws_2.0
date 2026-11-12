@@ -8,7 +8,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -19,6 +18,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
@@ -26,15 +30,15 @@ public class SecurityConfig {
 	// Autenticacion de la API
 	@Bean
 	@Order(1)
-	public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider)
-			throws Exception {
-
+	public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http,
+			JwtAuthenticationConverter jwtAuthenticationConverter) throws Exception {
 		http.securityMatcher("/api/**").csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authenticationProvider(authenticationProvider)
-				.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/api/auth/registro").permitAll()
-						.anyRequest().authenticated())
-				.httpBasic(Customizer.withDefaults());
+				.authorizeHttpRequests(
+						auth -> auth.requestMatchers(HttpMethod.POST, "/api/auth/registro", "/api/auth/login")
+								.permitAll().anyRequest().authenticated())
+				.oauth2ResourceServer(
+						oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)));
 
 		return http.build();
 	}
@@ -58,9 +62,10 @@ public class SecurityConfig {
 		http.authenticationProvider(authenticationProvider)
 				.addFilterBefore(cuentaActivaFilter, UsernamePasswordAuthenticationFilter.class)
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/login", "/registro", "/error", "/css/**", "/js/**", "/images/**").permitAll()
-						.requestMatchers("/admin/**").hasRole("ADMIN").requestMatchers("/gestor/**").hasRole("GESTOR")
-						.requestMatchers("/adoptante/**").hasRole("ADOPTANTE").anyRequest().authenticated())
+						.requestMatchers("/login", "/registro", "/error", "/css/**", "/js/**", "/images/**", "/uploads/mascotas/**")
+						.permitAll().requestMatchers("/admin/**").hasRole("ADMIN").requestMatchers("/gestor/**")
+						.hasRole("GESTOR").requestMatchers("/adoptante/**").hasRole("ADOPTANTE").anyRequest()
+						.authenticated())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login").defaultSuccessUrl("/", true)
 						.failureUrl("/login?error").permitAll())
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout")
@@ -74,5 +79,10 @@ public class SecurityConfig {
 		FilterRegistrationBean<CuentaActivaFilter> registration = new FilterRegistrationBean<>(filter);
 		registration.setEnabled(false);
 		return registration;
+	}
+
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+		return configuration.getAuthenticationManager();
 	}
 }

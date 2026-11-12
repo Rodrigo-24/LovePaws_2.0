@@ -72,6 +72,10 @@ public class Usuario {
     @Column(name = "fecha_actualizacion", nullable = false)
     private LocalDateTime fechaActualizacion;
     
+    @Column(name = "token_version", nullable = false)
+    private long tokenVersion = 0L;
+    
+    
     protected Usuario() {
     	
     }
@@ -189,5 +193,13 @@ public class Usuario {
 
     public LocalDateTime getFechaActualizacion() {
         return fechaActualizacion;
+    }
+    
+    public long getTokenVersion() {
+        return tokenVersion;
+    }
+
+    public void incrementarTokenVersion() {
+        this.tokenVersion++;
     }
 }

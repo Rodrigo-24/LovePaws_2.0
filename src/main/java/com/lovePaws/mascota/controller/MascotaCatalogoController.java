@@ -26,4 +26,11 @@ public class MascotaCatalogoController {
 		List<MascotaRespuestaDTO> mascotas = mascotaService.listarCatalogo(tipo);
 		return ResponseEntity.ok(mascotas);
 	}
+
+	// Consultar el detalle de una mascota disponible
+	@GetMapping("/{idMascota}")
+	public ResponseEntity<MascotaRespuestaDTO> obtenerDetalleMascota(@PathVariable Long idMascota) {
+		MascotaRespuestaDTO mascota = mascotaService.buscarMascotaDisponible(idMascota);
+		return ResponseEntity.ok(mascota);
+	}
 }

@@ -99,6 +99,11 @@ public class UsuarioService {
 
 	@Transactional
 	public UsuarioRespuestaDTO registrarAdoptante(RegistroAdoptanteDTO datos) {
+
+		// NORMALIZAR LOS DATOS
+		String username = datos.getUsername().trim();
+		String email = datos.getEmail().trim().toLowerCase(Locale.ROOT);
+
 		// COMPROBAR SI EL USERNAME YA EXISTE
 		if (usuarioRepository.existsByUsername(datos.getUsername())) {
 			throw new DatoDuplicadoException("El nombre de usuario ya está registrado");
@@ -117,8 +122,8 @@ public class UsuarioService {
 		String passwordHash = passwordEncoder.encode(datos.getPassword());
 
 		// CREAR LA ENTIDAD USUARIO
-		Usuario nuevoUsuario = new Usuario(rolAdoptante, datos.getUsername(), datos.getEmail(), passwordHash,
-				datos.getNombres(), datos.getApellidos(), EstadoUsuario.ACTIVO);
+		Usuario nuevoUsuario = new Usuario(rolAdoptante, username, email, passwordHash, datos.getNombres(),
+				datos.getApellidos(), EstadoUsuario.ACTIVO);
 
 		// GUARDAR EL USUARIO
 		Usuario usuarioGuardado = usuarioRepository.save(nuevoUsuario);
@@ -230,6 +235,10 @@ public class UsuarioService {
 
 		// Cifrar y guardar nueva contraseña
 		usuario.setPasswordHash(passwordEncoder.encode(datos.getPasswordNueva()));
+
+		// Revocar los tokens anteriores
+		usuario.incrementarTokenVersion();
+
 		usuarioRepository.save(usuario);
 	}
 

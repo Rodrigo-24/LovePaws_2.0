@@ -16,12 +16,14 @@ public class UsuarioDetails implements UserDetails {
 	private final String passwordHash;
 	private final Collection<? extends GrantedAuthority> authorities;
 	private final boolean activo;
+	private final long tokenVersion;
 
 	public UsuarioDetails(Usuario usuario) {
 		this.username = usuario.getUsername();
 		this.passwordHash = usuario.getPasswordHash();
 		this.authorities = List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().getNombre().name()));
 		this.activo = usuario.getEstado() == EstadoUsuario.ACTIVO;
+		this.tokenVersion = usuario.getTokenVersion();
 	}
 
 	@Override
@@ -58,4 +60,8 @@ public class UsuarioDetails implements UserDetails {
     public boolean isEnabled() {
         return activo;
     }
+
+	public long getTokenVersion() {
+		return tokenVersion;
+	}
 }

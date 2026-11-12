@@ -9,16 +9,28 @@ import com.lovePaws.usuario.entity.RolNombre;
 import com.lovePaws.usuario.entity.Usuario;
 import java.util.List;
 
-
-public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
 	Optional<Usuario> findByUsername(String username);
+
 	Optional<Usuario> findByEmail(String email);
+
 	boolean existsByUsername(String username);
+
 	boolean existsByEmail(String email);
+
 	Optional<Usuario> findByUsernameAndEstado(String username, EstadoUsuario estado);
+
 	List<Usuario> findAllByRol_Nombre(RolNombre nombre);
+
 	boolean existsByRol_Nombre(RolNombre nombre);
+
 	boolean existsByUsernameAndIdUsuarioNot(String username, Long idUsuario);
+
 	boolean existsByEmailAndIdUsuarioNot(String email, Long idUsuario);
+
+	boolean existsByUsernameAndEstadoAndRol_Nombre(String username, EstadoUsuario estado, RolNombre rol);
+
+	boolean existsByUsernameAndEstadoAndRol_NombreAndTokenVersion(String username, EstadoUsuario estado, RolNombre rol,
+			long tokenVersion);
 }

@@ -1,7 +1,6 @@
 package com.lovePaws.solicitud.controller;
 
 import com.lovePaws.solicitud.dto.CrearSolicitudDTO;
-import com.lovePaws.solicitud.dto.EventoAdopcionDTO;
 import com.lovePaws.solicitud.dto.PreguntaSolicitudDTO;
 import com.lovePaws.solicitud.dto.SolicitudAdopcionDetalleDTO;
 import com.lovePaws.solicitud.dto.SolicitudAdopcionRespuestaDTO;
@@ -50,14 +49,6 @@ public class SolicitudAdopcionController {
 			Authentication authentication) {
 		SolicitudAdopcionDetalleDTO respuesta = solicitudService.obtenerDetalleSolicitud(id, authentication.getName());
 		return ResponseEntity.ok(respuesta);
-	}
-
-	// Consultar el historial de una solicitud
-	@GetMapping("/{id}/historial")
-	public ResponseEntity<List<EventoAdopcionDTO>> obtenerHistorial(@PathVariable Long id,
-			Authentication authentication) {
-		List<EventoAdopcionDTO> historial = solicitudService.obtenerHistorialAdoptante(id, authentication.getName());
-		return ResponseEntity.ok(historial);
 	}
 
 	// Consultar las preguntas activas del formulario de adopción
