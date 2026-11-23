@@ -1,0 +1,67 @@
+name: lovepaws
+
+services:
+
+  # Base de datos
+  mysql:
+    image: mysql:9.7.4
+    container_name: lovepaws-mysql
+    command:
+      - --lower-case-table-names=1
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Define MYSQL_ROOT_PASSWORD en .env}
+      MYSQL_DATABASE: lovepaws_v2
+      MYSQL_USER: ${DB_USERNAME:?Define DB_USERNAME en .env}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD en .env}
+
+    ports:
+      - "192.168.18.65:8080:8080"
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/local/lovepaws_v2.sql:/docker-entrypoint-initdb.d/01-lovepaws.sql:ro
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'mysqladmin ping -h 127.0.0.1 -uroot -p"$${MYSQL_ROOT_PASSWORD}" --silent'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+
+  # Aplicación Spring Boot
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: lovepaws-app
+    restart: unless-stopped
+    init: true
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    ports:
+      - "127.0.0.1:8080:8080"
+
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/lovepaws_v2
+      DB_USERNAME: ${DB_USERNAME:?Define DB_USERNAME en .env}
+      DB_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD en .env}
+      LOVEPAWS_JWT_SECRET: ${LOVEPAWS_JWT_SECRET:?Define LOVEPAWS_JWT_SECRET en .env}
+      APP_UPLOADS_MASCOTASDIR: /app/uploads/mascotas
+      BOOTSTRAP_ADMIN_ENABLED: "false"
+
+    volumes:
+      - ./uploads/mascotas:/app/uploads/mascotas
+
+
+# Volúmenes persistentes
+volumes:
+  mysql_data:

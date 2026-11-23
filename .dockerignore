@@ -1,0 +1,31 @@
+# Git
+.git/
+.gitignore
+
+# Spring Tools / Eclipse
+.settings/
+.classpath
+.project
+.springBeans
+.sts4-cache/
+
+# IDE
+.idea/
+.vscode/
+
+# Maven
+target/
+
+# Fotografías: se montarán mediante un volumen
+uploads/
+
+# Variables de entorno y secretos
+.env
+.env.*
+!.env.example
+
+# Logs y archivos del sistema
+*.log
+logs/
+.DS_Store
+Thumbs.db
